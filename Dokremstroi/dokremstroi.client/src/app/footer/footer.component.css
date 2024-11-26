@@ -1,0 +1,46 @@
+
+/* Footer */
+footer {
+  background-color: #00263b; /* Единый стиль с хедером */
+  color: #ffffff;
+  padding: 10px 0;
+  text-align: center;
+  position: fixed; /* Подвал как приклеенный */
+  bottom: 0; /* Фиксация снизу */
+  left: 0; /* К началу слева */
+  right: 0; /* Без отступов справа */
+}
+
+
+  footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  footer .company-info {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  footer .social-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+  }
+
+    footer .social-links li {
+      display: inline-block;
+    }
+
+    footer .social-links a {
+      color: #ffffff;
+      font-size: 20px;
+      transition: color 0.3s;
+    }
+
+      footer .social-links a:hover {
+        color: #fbc02d;
+      }

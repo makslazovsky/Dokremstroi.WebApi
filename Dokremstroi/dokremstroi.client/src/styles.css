@@ -1,0 +1,11 @@
+/* Убираем отступы и поля по умолчанию */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Дополнительно настраиваем box-sizing для всех элементов */
+*, *::before, *::after {
+  box-sizing: inherit;
+}

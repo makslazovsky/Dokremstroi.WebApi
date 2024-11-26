@@ -1,5 +1,6 @@
 ﻿using Dokremstroi.Data.Models;
 using Dokremstroi.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace Dokremstroi.Services.Managers
 {
-    public class UserManager : ManagerBase<User>
+    public class UserManager : ManagerBase<User>, IUserManager
     {
-        public UserManager(IRepository<User> repository) : base(repository) { }
+        public UserManager(IRepository<User> repository) : base(repository)  { }
 
-        // Дополнительные методы для работы с пользователями, если потребуется
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _repository.FindAsync(u => u.Username == username);
+        }
     }
 }

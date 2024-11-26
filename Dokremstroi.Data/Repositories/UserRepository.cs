@@ -11,5 +11,6 @@ namespace Dokremstroi.Data.Repositories
     public class UserRepository : Repository<User>
     {
         public UserRepository(DokremstroiContext context) : base(context) { }
+
     }
 }

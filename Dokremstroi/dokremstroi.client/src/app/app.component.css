@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  margin: 0;
+  padding: 0; /* Убираем лишние отступы */
+}
+
+main {
+  max-width: 100%; /* Полная ширина */
+  margin: 0 auto;
+}
+
+body {
+margin: 0px;
+}
+
+app-footer {
+  flex: 0 0 auto; /* Футер занимает только необходимую высоту */
+}

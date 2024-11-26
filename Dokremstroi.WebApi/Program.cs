@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,21 +54,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DokremstroiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-// Добавьте поддержку статических файлов
-builder.Services.AddControllers();
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Настройка для разработки
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -80,19 +76,19 @@ else
     app.UseHsts();
 }
 
-// Статические файлы
 app.UseStaticFiles();
-
-
-
-app.UseCors("AllowAngularApp");
-
 app.UseHttpsRedirection();
+app.UseRouting();
 
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Настройка маршрутизации для Angular
-app.MapControllers();
-app.MapFallbackToFile("index.html");  // Обеспечивает маршрутизацию Angular
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
+});
 
 app.Run();

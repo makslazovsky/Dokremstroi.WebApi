@@ -1,0 +1,19 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <img src="assets/logo.png" alt="Dokremstroi Logo">
+    </div>
+    <button class="menu-toggle" (click)="toggleMenu()">☰</button>
+    <nav [class.open]="isMenuOpen">
+      <ul>
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Главная</a></li>
+        <li><a routerLink="/services" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Услуги</a></li>
+        <li><a routerLink="/completed-orders" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Выполненные заказы</a></li>
+        <li><a routerLink="/reviews" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Отзывы</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Контакты</a></li>
+        <li><a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Логин</a></li>
+        <li><a routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Регистрация</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
