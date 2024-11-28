@@ -11,8 +11,15 @@
         <li><a routerLink="/completed-orders" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Выполненные заказы</a></li>
         <li><a routerLink="/reviews" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Отзывы</a></li>
         <li><a routerLink="/contact" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Контакты</a></li>
-        <li><a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Логин</a></li>
-        <li><a routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Регистрация</a></li>
+
+        <!-- Отображение кнопок для авторизованных и неавторизованных пользователей -->
+        <ng-container *ngIf="isLoggedIn(); else guestMenu">
+          <li><button (click)="logout()">Выход</button></li>
+        </ng-container>
+        <ng-template #guestMenu>
+          <li><a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Логин</a></li>
+          <li><a routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Регистрация</a></li>
+        </ng-template>
       </ul>
     </nav>
   </div>

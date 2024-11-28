@@ -17,10 +17,12 @@ namespace Dokremstroi.Server.Controllers
     public class UserController : BaseController<User>
     {
         private readonly IUserManager _userManager;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IManager<User> manager, IUserManager userManager) : base(manager)
+        public UserController(IManager<User> manager, IUserManager userManager, IConfiguration configuration) : base(manager)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -90,7 +92,7 @@ namespace Dokremstroi.Server.Controllers
         // Метод для генерации JWT
         private string GenerateJwtToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKey12345")); // Совпадает с Jwt:Key
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])); // Совпадает с Jwt:Key
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]

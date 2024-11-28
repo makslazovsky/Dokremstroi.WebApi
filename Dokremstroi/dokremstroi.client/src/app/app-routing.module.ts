@@ -9,11 +9,21 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'admin-dashboard', component: AdminDashboardComponent },
-  { path: 'user-dashboard', component: UserDashboardComponent },
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] }
+  },
+  {
+    path: 'user-dashboard',
+    component: UserDashboardComponent,
+    canActivate: [AuthGuard] // Доступ для авторизованных (admin или client)
+  },
   { path: '', component: HomeComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'completed-orders', component: CompletedOrdersComponent },

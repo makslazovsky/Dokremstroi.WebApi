@@ -1,51 +1,40 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthManager } from '../managers/auth.manager';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  user = {
-    email: '',
-    password: '',
-  };
+  credentials = { username: '', password: '' };
+  errorMessage = '';
 
-  message: string = '';
+  constructor(private authManager: AuthManager, private router: Router) { }
 
-  constructor(private http: HttpClient, private router: Router) { }
+  onLogin() {
+    this.authManager.login(this.credentials).subscribe({
+      next: (response) => {
+        if (response.success && response.data.token) {
+          this.authManager.saveToken(response.data.token);
 
-  onSubmit() {
-    if (this.user.email && this.user.password) {
-      const requestBody = {
-        username: this.user.email,
-        password: this.user.password,
-      };
+          const role = this.authManager.hasRole('admin') ? 'admin' : 'client';
 
-      this.http.post('https://localhost:7139/api/user/login', requestBody).subscribe({
-        next: (response: any) => {
-          if (response.success) {
-            const role = response.data.role;
-
-            // Перенаправляем в зависимости от роли
-            if (role === 'admin') {
-              this.router.navigate(['/admin-dashboard']);
-            } else {
-              this.router.navigate(['/user-dashboard']);
-            }
+          // Перенаправление на страницу в зависимости от роли
+          if (role === 'admin') {
+            this.router.navigate(['/admin-dashboard']);
           } else {
-            this.message = response.message;
+            this.router.navigate(['/user-dashboard']);
           }
-        },
-        error: (error) => {
-          console.error(error);
-          this.message = error.error?.message || 'Ошибка входа.';
-        },
-      });
-    } else {
-      this.message = 'Пожалуйста, заполните все обязательные поля.';
-    }
+        } else {
+          this.errorMessage = response.message || 'Ошибка входа';
+        }
+      },
+      error: (error) => {
+        console.error('Ошибка входа:', error);
+        this.errorMessage = error.error?.message || 'Ошибка на сервере';
+      },
+    });
   }
 }
