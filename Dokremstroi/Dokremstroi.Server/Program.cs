@@ -9,16 +9,14 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Конфигурация JWT
-var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtKey = builder.Configuration["Jwt:Key"]; // Секретный ключ из appsettings.json
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -27,25 +25,16 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtIssuer,
-        ValidAudience = jwtAudience,
+        ValidAudience = jwtIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
-// Add services to the container.
-builder.Services.AddScoped<IRepository<Service>, ServiceRepository>();
-builder.Services.AddScoped<IRepository<CompletedOrder>, CompletedOrderRepository>();
-builder.Services.AddScoped<IRepository<UserOrder>, UserOrderRepository>();
-builder.Services.AddScoped<IRepository<Review>, ReviewRepository>();
-builder.Services.AddScoped<IRepository<ContactInfo>, ContactInfoRepository>();
-builder.Services.AddScoped<IRepository<User>, UserRepository>();
+// Регистрация репозиториев
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-builder.Services.AddScoped<IManager<Service>, ServiceManager>();
-builder.Services.AddScoped<IManager<CompletedOrder>, CompletedOrderManager>();
-builder.Services.AddScoped<IManager<UserOrder>, UserOrderManager>();
-builder.Services.AddScoped<IManager<Review>, ReviewManager>();
-builder.Services.AddScoped<IManager<ContactInfo>, ContactInfoManager>();
-builder.Services.AddScoped<IManager<User>, UserManager>();
+// Регистрация менеджеров
+builder.Services.AddScoped(typeof(IManager<>), typeof(ManagerBase<>));
 builder.Services.AddScoped<IUserManager, UserManager>();
 
 // Добавляем CORS
@@ -66,6 +55,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DokremstroiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAuthorization(); // Добавляем поддержку авторизации
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -83,6 +74,7 @@ app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

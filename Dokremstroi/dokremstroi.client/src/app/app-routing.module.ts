@@ -7,8 +7,13 @@ import { ReviewsComponent } from './reviews/reviews.component';
 import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'admin-dashboard', component: AdminDashboardComponent },
+  { path: 'user-dashboard', component: UserDashboardComponent },
   { path: '', component: HomeComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'completed-orders', component: CompletedOrdersComponent },

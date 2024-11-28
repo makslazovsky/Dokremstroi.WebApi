@@ -18,8 +18,10 @@
     <div *ngIf="registerForm.submitted && registerForm.controls['password']?.errors?.['minlength']">
       Пароль должен содержать минимум 6 символов.
     </div>
-
-    <p *ngIf="message" class="message">{{ message }}</p>
+    
+    <div *ngIf="message" class="alert alert-info">
+      {{ message }}
+    </div>
 
     <button type="submit">Зарегистрироваться</button>
   </form>

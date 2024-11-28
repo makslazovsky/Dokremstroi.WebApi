@@ -47,3 +47,14 @@ button {
   margin-top: 1rem;
   font-weight: bold;
 }
+.alert {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.alert-info {
+  background-color: #e7f3fe;
+  color: #31708f;
+  border: 1px solid #bce8f1;
+}

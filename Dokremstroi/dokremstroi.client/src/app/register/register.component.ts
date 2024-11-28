@@ -24,17 +24,24 @@ export class RegisterComponent {
       };
 
       this.http.post('https://localhost:7139/api/user/register', requestBody).subscribe({
-        next: (response) => {
-          this.message = 'Пользователь успешно зарегистрирован!';
+        next: (response: any) => {
+          if (response.success) {
+            this.message = response.message; // Успешное сообщение
+          } else {
+            this.message = 'Что-то пошло не так: ' + response.message; // На случай некорректного успеха
+          }
         },
         error: (error) => {
           console.error(error); // Для отладки
-          this.message = 'Произошла ошибка при регистрации: ' + error.error || error.message;
+          if (error.error && error.error.message) {
+            this.message = error.error.message; // Сообщение об ошибке
+          } else {
+            this.message = 'Произошла ошибка при регистрации: ' + (error.message || 'Неизвестная ошибка.');
+          }
         },
       });
     } else {
       this.message = 'Пожалуйста, заполните все обязательные поля.';
     }
   }
-
 }
