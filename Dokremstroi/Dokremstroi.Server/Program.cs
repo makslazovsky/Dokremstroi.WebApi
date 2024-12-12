@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtKey = builder.Configuration["Jwt:Key"]; // Секретный ключ из appsettings.json
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 
+builder.Services.AddDbContext<DokremstroiContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,6 +39,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 // Регистрация менеджеров
 builder.Services.AddScoped(typeof(IManager<>), typeof(ManagerBase<>));
 builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<ICompletedOrderManager, CompletedOrderManager>();
 
 // Добавляем CORS
 builder.Services.AddCors(options =>
@@ -48,12 +52,40 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DokremstroiContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Введите токен JWT в формате: Bearer {ваш токен}"
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+
 
 builder.Services.AddAuthorization(); // Добавляем поддержку авторизации
 

@@ -1,18 +1,12 @@
-/* Сброс отступов */
+/* Основные сбросы */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
 header {
-  width: 100%;
-  background: linear-gradient(to right, #072e58, #00263b);
+  background: linear-gradient(to right, #0a2748, #004b7a);
   color: white;
   position: sticky;
   top: 0;
@@ -21,113 +15,149 @@ header {
 
 .container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between; /* Логотип слева, меню по центру, кнопки справа */
   padding: 10px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.logo img {
-  max-height: 50px;
-  transition: transform 0.3s;
+/* Логотип */
+.logo {
+  flex: 0 0 auto; /* Логотип остаётся слева */
 }
 
-  .logo img:hover {
-    transform: scale(1.1);
+  .logo img {
+    max-height: 50px;
+    transition: transform 0.3s;
   }
 
+    .logo img:hover {
+      transform: scale(1.1);
+    }
+
+/* Меню */
+nav {
+  flex: 1 1 auto; /* Меню занимает центральное пространство */
+  display: flex;
+  justify-content: center;
+}
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+  }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-family: 'Roboto', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+      nav ul li a.active {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      nav ul li a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+/* Кнопки логина и регистрации */
+.auth-buttons {
+  flex: 0 0 auto; /* Кнопки занимают правую сторону */
+  display: flex;
+  gap: 10px; /* Расстояние между кнопками */
+}
+
+  .auth-buttons a,
+  .auth-buttons button {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+    transition: background 0.3s, color 0.3s;
+    cursor: pointer;
+  }
+
+    .auth-buttons a:hover,
+    .auth-buttons button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+/* Кнопка меню */
 .menu-toggle {
   display: none;
-  font-size: 24px;
   background: none;
   border: none;
-  cursor: pointer;
   color: white;
+  font-size: 24px;
+  cursor: pointer;
 }
 
-nav ul {
-  display:flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-  nav ul li a {
-    display: block;
-    text-decoration: none;
-    text-align: left;
-    color: white;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-    font-family: 'Roboto', sans-serif;
+  .menu-toggle:focus {
+    outline: none;
   }
 
-    nav ul li a.active {
-      background-color: #0056b3;
-      color: white;
-    }
-
-    nav ul li a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-
-  nav ul li {
-    margin: 5px 0; /* Отступ между пунктами */
-  }
-
+/* Стили для мобильных устройств */
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
   }
 
   nav {
-    display: none;
-    flex-direction: column;
     position: absolute;
     top: 60px;
     left: 0;
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    padding: 5px;
-    border-radius: 5px;
-    z-index: 1000;
     width: 100%;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s, transform 0.3s;
+    background: #0a2748;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
   }
 
     nav.open {
       display: flex;
-      opacity: 1;
-      transform: translateY(0);
     }
 
     nav ul {
       flex-direction: column;
+      width: 100%;
     }
 
       nav ul li {
-        margin: 5px 0;
+        width: 100%;
       }
 
         nav ul li a {
-          background-color: #ffffff;
-          color: #007bff;
-          border: 1px solid #e0e0e0;
-          border-radius: 5px;
+          display: block;
+          text-align: center;
+          width: 100%;
+          padding: 10px;
         }
 
-          nav ul li a:hover {
-            background-color: #007bff;
-            color: #ffffff;
+          nav ul li a.active {
+            background: rgba(255, 255, 255, 0.1);
+            width: 100%;
           }
 
-        nav ul li:last-child a {
-          border-bottom: none;
-        }
+  .auth-buttons {
+    flex-direction: column; /* Кнопки логина и регистрации становятся вертикальными */
+    width: 100%;
+    align-items: center;
+  }
+
+    .auth-buttons a,
+    .auth-buttons button {
+      width: 100%; /* Кнопки занимают всю ширину */
+      text-align: center;
+    }
 }

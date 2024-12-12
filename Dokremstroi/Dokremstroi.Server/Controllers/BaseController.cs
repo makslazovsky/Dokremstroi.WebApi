@@ -16,14 +16,14 @@ namespace Dokremstroi.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<T>>> GetAll()
+        public virtual async Task<ActionResult<IEnumerable<T>>> GetAll()
         {
             var items = await _manager.GetAllAsync();
             return Ok(items);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<T>> Get(int id)
+        public virtual async Task<ActionResult<T>> Get(int id)
         {
             var item = await _manager.GetByIdAsync(id);
             if (item == null)
@@ -34,18 +34,29 @@ namespace Dokremstroi.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(T item)
+        public virtual async Task<ActionResult> Create(T item)
         {
             await _manager.AddAsync(item);
             return CreatedAtAction(nameof(Get), new { id = item.GetHashCode() }, item);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, T item)
+        public virtual async Task<ActionResult> Update(int id, T item)
         {
-            if (id != item.GetHashCode()) // замените проверку по id на реальную проверку, если необходимо
+            // Проверяем, что объект имеет свойство Id
+            var itemIdProperty = typeof(T).GetProperty("Id");
+            if (itemIdProperty == null)
             {
-                return BadRequest();
+                return BadRequest("Модель не содержит свойства Id.");
+            }
+
+            // Получаем значение Id из объекта
+            var itemIdValue = (int)itemIdProperty.GetValue(item);
+
+            // Проверяем совпадение ID из маршрута и тела
+            if (id != itemIdValue)
+            {
+                return BadRequest("ID из маршрута не совпадает с ID из объекта.");
             }
 
             await _manager.UpdateAsync(item);
@@ -53,10 +64,11 @@ namespace Dokremstroi.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public virtual async Task<ActionResult> Delete(int id)
         {
             await _manager.DeleteAsync(id);
             return NoContent();
         }
     }
+
 }

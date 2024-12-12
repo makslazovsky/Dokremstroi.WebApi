@@ -1,1 +1,16 @@
-<p>contact works!</p>
+<div *ngIf="contactInfo; else loading">
+  <h2>Контактная информация</h2>
+  <p><strong>Адрес:</strong> {{ contactInfo.address }}</p>
+  <p><strong>Телефон:</strong> {{ contactInfo.phoneNumber }}</p>
+  <p><strong>Email:</strong> <a href="mailto:{{ contactInfo.email }}">{{ contactInfo.email }}</a></p>
+  <p><strong>Карта:</strong> <a [href]="contactInfo.mapLink" target="_blank">Открыть карту</a></p>
+  <p><strong>Банковские реквизиты:</strong> {{ contactInfo.bankDetails }}</p>
+</div>
+
+<ng-template #loading>
+  <p *ngIf="errorMessage; else loadingMessage">{{ errorMessage }}</p>
+</ng-template>
+
+<ng-template #loadingMessage>
+  <p>Загрузка контактной информации...</p>
+</ng-template>

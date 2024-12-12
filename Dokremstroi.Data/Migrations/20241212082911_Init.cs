@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dokremstroi.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "CompletedOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompletionDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompletedOrders", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ContactInfos",
                 columns: table => new
@@ -44,38 +58,36 @@ namespace Dokremstroi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserOrders",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOrders", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompletedOrders",
+                name: "CompletedOrderImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompletionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompletedOrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompletedOrders", x => x.Id);
+                    table.PrimaryKey("PK_CompletedOrderImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CompletedOrders_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
+                        name: "FK_CompletedOrderImages_CompletedOrders_CompletedOrderId",
+                        column: x => x.CompletedOrderId,
+                        principalTable: "CompletedOrders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -104,6 +116,28 @@ namespace Dokremstroi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserOrders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserOrderServices",
                 columns: table => new
                 {
@@ -127,40 +161,20 @@ namespace Dokremstroi.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "CompletedOrderImages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompletedOrderId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompletedOrderImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompletedOrderImages_CompletedOrders_CompletedOrderId",
-                        column: x => x.CompletedOrderId,
-                        principalTable: "CompletedOrders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_CompletedOrderImages_CompletedOrderId",
                 table: "CompletedOrderImages",
                 column: "CompletedOrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompletedOrders_ServiceId",
-                table: "CompletedOrders",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ServiceId",
                 table: "Reviews",
                 column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOrders_UserId",
+                table: "UserOrders",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserOrderServices_ServiceId",
@@ -187,10 +201,13 @@ namespace Dokremstroi.Data.Migrations
                 name: "CompletedOrders");
 
             migrationBuilder.DropTable(
+                name: "Services");
+
+            migrationBuilder.DropTable(
                 name: "UserOrders");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "Users");
         }
     }
 }

@@ -18,6 +18,11 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
+import { ManageContactsComponent } from './admin/manage-contacts/manage-contacts.component';
+import { ManageServicesComponent } from './admin/manage-services/manage-services.component';
+import { ManageReviewsComponent } from './admin/manage-reviews/manage-reviews.component';
+import { ManageMainComponent } from './admin/manage-main/manage-main.component';
+import { ManageCompletedOrdersComponent } from './admin/manage-completed-orders/manage-completed-orders.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +37,12 @@ import { AuthGuard } from './guards/auth.guard';
     LoginComponent,
     RegisterComponent,
     AdminDashboardComponent,
-    UserDashboardComponent
+    UserDashboardComponent,
+    ManageContactsComponent,
+    ManageServicesComponent,
+    ManageReviewsComponent,
+    ManageMainComponent,
+    ManageCompletedOrdersComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

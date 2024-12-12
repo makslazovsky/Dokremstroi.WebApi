@@ -37,12 +37,7 @@ namespace Dokremstroi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ServiceId");
 
                     b.ToTable("CompletedOrders");
                 });
@@ -222,17 +217,6 @@ namespace Dokremstroi.Data.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("UserOrderServices");
-                });
-
-            modelBuilder.Entity("Dokremstroi.Data.Models.CompletedOrder", b =>
-                {
-                    b.HasOne("Dokremstroi.Data.Models.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Dokremstroi.Data.Models.CompletedOrderImage", b =>

@@ -1,5 +1,5 @@
-.login-container {
-  max-width: 400px;
+.manage-contacts-container {
+  max-width: 600px;
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #ccc;
@@ -21,7 +21,7 @@ label {
   font-weight: bold;
 }
 
-input {
+input, textarea {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -43,13 +43,10 @@ button {
   }
 
 .alert {
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
-}
-
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #e7f3fe;
+  color: #31708f;
+  border: 1px solid #bce8f1;
 }

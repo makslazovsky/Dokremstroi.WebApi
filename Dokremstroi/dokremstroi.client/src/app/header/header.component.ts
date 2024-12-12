@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthManager } from '../managers/auth.manager';
 import { Router } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   isMenuOpen = false;
+  isMobile = window.innerWidth <= 768;
 
   constructor(public authManager: AuthManager, private router: Router) { }
 
@@ -18,10 +19,18 @@ export class HeaderComponent {
 
   logout() {
     this.authManager.logout();
-    this.router.navigate(['/']); // Перенаправление на главную страницу после выхода
+    this.router.navigate(['/']);
   }
 
   isLoggedIn(): boolean {
     return this.authManager.isLoggedIn();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.isMobile = window.innerWidth <= 768;
+    if (!this.isMobile) {
+      this.isMenuOpen = false; // Закрытие меню при переходе на десктоп
+    }
   }
 }

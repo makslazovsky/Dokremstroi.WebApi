@@ -1,15 +1,38 @@
 <div class="login-container">
   <h2>Вход</h2>
-  <form (ngSubmit)="onLogin()">
-    <div>
-      <label for="username">Email:</label>
-      <input id="username" [(ngModel)]="credentials.username" name="username" required />
+  <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+    <!-- Email -->
+    <label for="username">Email:</label>
+    <input type="email"
+           id="username"
+           [(ngModel)]="credentials.username"
+           name="username"
+           required
+           email />
+    <div *ngIf="loginForm.submitted && loginForm.controls['username']?.errors?.['required']">
+      Email обязателен.
     </div>
-    <div>
-      <label for="password">Пароль:</label>
-      <input id="password" [(ngModel)]="credentials.password" name="password" type="password" required />
+    <div *ngIf="loginForm.submitted && loginForm.controls['username']?.errors?.['email']">
+      Некорректный email.
     </div>
+
+    <!-- Password -->
+    <label for="password">Пароль:</label>
+    <input type="password"
+           id="password"
+           [(ngModel)]="credentials.password"
+           name="password"
+           required />
+    <div *ngIf="loginForm.submitted && loginForm.controls['password']?.errors?.['required']">
+      Пароль обязателен.
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Submit Button -->
     <button type="submit">Войти</button>
   </form>
-  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 </div>

@@ -1,0 +1,36 @@
+<div class="manage-contacts-container">
+  <h2>Управление контактной информацией</h2>
+
+  <form *ngIf="contactInfo" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="address">Адрес:</label>
+      <input id="address" [(ngModel)]="contactInfo.address" name="address" required />
+    </div>
+
+    <div>
+      <label for="phoneNumber">Телефон:</label>
+      <input id="phoneNumber" [(ngModel)]="contactInfo.phoneNumber" name="phoneNumber" required />
+    </div>
+
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" [(ngModel)]="contactInfo.email" name="email" type="email" required />
+    </div>
+
+    <div>
+      <label for="mapLink">Ссылка на карту:</label>
+      <input id="mapLink" [(ngModel)]="contactInfo.mapLink" name="mapLink" />
+    </div>
+
+    <div>
+      <label for="bankDetails">Банковские реквизиты:</label>
+      <textarea id="bankDetails" [(ngModel)]="contactInfo.bankDetails" name="bankDetails"></textarea>
+    </div>
+
+    <button type="submit">Сохранить изменения</button>
+  </form>
+
+  <div *ngIf="message" class="alert alert-info">
+    {{ message }}
+  </div>
+</div>

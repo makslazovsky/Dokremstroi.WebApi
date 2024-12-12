@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dokremstroi.Data.Models
 {
+    //Add-Migration Init -StartupProject "Dokremstroi.Server" -Project "Dokremstroi.Data"
+
     public class DokremstroiContext : DbContext
     {
         public DokremstroiContext(DbContextOptions<DokremstroiContext> options) : base(options) { }
