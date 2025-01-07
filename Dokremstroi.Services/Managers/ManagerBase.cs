@@ -1,5 +1,6 @@
 ﻿using Dokremstroi.Data.Models;
 using Dokremstroi.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,11 @@ namespace Dokremstroi.Services.Managers
         public async Task<T> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _repository.FindAsync(predicate);
+        }
+
+        public async Task<IEnumerable<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _repository.GetFilteredAsync(predicate);
         }
     }
 }

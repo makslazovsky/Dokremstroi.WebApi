@@ -19,10 +19,10 @@ export class LoginComponent {
         if (response.success && response.data.token) {
           this.authManager.saveToken(response.data.token);
 
-          const role = this.authManager.hasRole('admin') ? 'admin' : 'client';
+          const role = this.authManager.hasRole('Admin') ? 'Admin' : 'client';
 
           // Перенаправление на страницу в зависимости от роли
-          if (role === 'admin') {
+          if (role === 'Admin') {
             this.router.navigate(['/admin-dashboard']);
           } else {
             this.router.navigate(['/user-dashboard']);

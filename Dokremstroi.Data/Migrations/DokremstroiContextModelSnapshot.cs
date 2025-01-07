@@ -97,6 +97,34 @@ namespace Dokremstroi.Data.Migrations
                     b.ToTable("ContactInfos");
                 });
 
+            modelBuilder.Entity("Dokremstroi.Data.Models.MainPageBlock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MainPageBlocks");
+                });
+
             modelBuilder.Entity("Dokremstroi.Data.Models.Review", b =>
                 {
                     b.Property<int>("Id")

@@ -18,6 +18,8 @@ namespace Dokremstroi.Data.Models
         public DbSet<User> Users { get; set; }
         public DbSet<CompletedOrderImage> CompletedOrderImages { get; set; } // Добавлен DbSet для изображений завершенных заказов
 
+        public DbSet<MainPageBlock> MainPageBlocks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Настройка связи многие-ко-многим между UserOrder и Service

@@ -13,7 +13,7 @@ import { ReviewsComponent } from './reviews/reviews.component';
 import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -23,10 +23,25 @@ import { ManageServicesComponent } from './admin/manage-services/manage-services
 import { ManageReviewsComponent } from './admin/manage-reviews/manage-reviews.component';
 import { ManageMainComponent } from './admin/manage-main/manage-main.component';
 import { ManageCompletedOrdersComponent } from './admin/manage-completed-orders/manage-completed-orders.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CompletedOrdersListComponent } from './admin/manage-completed-orders/completed-orders-list/completed-orders-list.component';
+import { CompletedOrdersEditComponent } from './admin/manage-completed-orders/completed-orders-edit/completed-orders-edit.component';
+import { ContactsListComponent } from './admin/manage-contacts/contacts-list/contacts-list.component';
+import { ContactsEditComponent } from './admin/manage-contacts/contacts-edit/contacts-edit.component';
+import { ReviewsListComponent } from './admin/manage-reviews/reviews-list/reviews-list.component';
+import { ReviewsEditComponent } from './admin/manage-reviews/reviews-edit/reviews-edit.component';
+import { ServicesListComponent } from './admin/manage-services/services-list/services-list.component';
+import { ServicesEditComponent } from './admin/manage-services/services-edit/services-edit.component';
+import { ModalDialogComponent } from './admin/crud/modal-dialog/modal-dialog.component';
+import { TableComponent } from './admin/crud/table/table.component';
+import { PaginationComponent } from './admin/crud/pagination/pagination.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    TableComponent,
     HomeComponent,
     HeaderComponent,
     FooterComponent,
@@ -42,9 +57,24 @@ import { ManageCompletedOrdersComponent } from './admin/manage-completed-orders/
     ManageServicesComponent,
     ManageReviewsComponent,
     ManageMainComponent,
-    ManageCompletedOrdersComponent
+    ManageCompletedOrdersComponent,
+    CompletedOrdersListComponent,
+    CompletedOrdersEditComponent,
+    ContactsListComponent,
+    ContactsEditComponent,
+    ReviewsListComponent,
+    ReviewsEditComponent,
+    ServicesListComponent,
+    ServicesEditComponent,
+    ModalDialogComponent,
+    TableComponent,
+    PaginationComponent
+
   ],
   imports: [
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
     BrowserModule, HttpClientModule,
     AppRoutingModule,
     FormsModule

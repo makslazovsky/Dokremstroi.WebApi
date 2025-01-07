@@ -56,5 +56,10 @@ namespace Dokremstroi.Data.Repositories
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
+
+        public async Task<IEnumerable<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
+        }
     }
 }

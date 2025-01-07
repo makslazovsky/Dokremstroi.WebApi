@@ -1,6 +1,7 @@
 ﻿using Dokremstroi.Services.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Dokremstroi.Server.Controllers
 {
@@ -69,6 +70,53 @@ namespace Dokremstroi.Server.Controllers
             await _manager.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpGet("filter")]
+        public virtual async Task<ActionResult<IEnumerable<T>>> GetFiltered([FromQuery] string filter)
+        {
+            // Преобразуем строку filter в выражение
+            var predicate = CreateFilterExpression(filter);
+
+            if (predicate == null)
+            {
+                return BadRequest("Некорректный фильтр.");
+            }
+
+            var items = await _manager.GetFilteredAsync(predicate);
+            return Ok(items);
+        }
+
+
+
+        private Expression<Func<T, bool>>? CreateFilterExpression(string filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+            {
+                return null;
+            }
+
+            // Пример: filter в формате "PropertyName=Value"
+            var parts = filter.Split('=');
+            if (parts.Length != 2)
+            {
+                return null; // Неверный формат
+            }
+
+            var propertyName = parts[0];
+            var propertyValue = parts[1];
+
+            // Получаем свойство типа T
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+
+            // Преобразуем значение фильтра в правильный тип
+            var constant = Expression.Constant(Convert.ChangeType(propertyValue, property.Type));
+
+            // Создаём выражение x => x.PropertyName == Value
+            var equality = Expression.Equal(property, constant);
+            return Expression.Lambda<Func<T, bool>>(equality, parameter);
+        }
+
     }
 
 }
