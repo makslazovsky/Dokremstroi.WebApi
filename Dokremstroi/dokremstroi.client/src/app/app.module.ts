@@ -38,6 +38,13 @@ import { ModalDialogComponent } from './admin/crud/modal-dialog/modal-dialog.com
 import { TableComponent } from './admin/crud/table/table.component';
 import { PaginationComponent } from './admin/crud/pagination/pagination.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule } from '@angular/forms';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +82,11 @@ import { PaginationComponent } from './admin/crud/pagination/pagination.componen
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatDialogModule, // Добавлено
+    MatFormFieldModule, // Добавлено
+    MatInputModule, // Добавлено
+    MatButtonModule, // Добавлено
+    ReactiveFormsModule,
     BrowserModule, HttpClientModule,
     AppRoutingModule,
     FormsModule

@@ -8,6 +8,6 @@
         public decimal Price { get; set; }
 
         // Навигационное свойство
-        public List<UserOrderService> UserOrderServices { get; set; }
+        public List<UserOrderService>? UserOrderServices { get; set; }
     }
 }

@@ -1,1 +1,35 @@
-<p>modal-dialog works!</p>
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <ng-container *ngFor="let field of data.fields">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ field.label }}</mat-label>
+        <ng-container [ngSwitch]="field.type">
+          <input *ngSwitchCase="'text'"
+                 matInput
+                 [formControlName]="field.name"
+                 [type]="field.type" />
+          <textarea *ngSwitchCase="'textarea'"
+                    matInput
+                    [formControlName]="field.name"></textarea>
+          <input *ngSwitchCase="'number'"
+                 matInput
+                 [formControlName]="field.name"
+                 [type]="field.type" />
+          <!-- Можно добавить другие типы -->
+        </ng-container>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Отмена</button>
+  <button mat-raised-button
+          color="primary"
+          [disabled]="form.invalid"
+          (click)="onSubmit()">
+    Сохранить
+  </button>
+</mat-dialog-actions>

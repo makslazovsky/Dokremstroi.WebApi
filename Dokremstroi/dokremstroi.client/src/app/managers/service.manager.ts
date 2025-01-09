@@ -22,4 +22,17 @@ export class ServiceManager {
   update(id: number, service: Service): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, service);
   }
+
+  updateService(id: number, data: any): Observable<any> {
+    console.log('Данные, отправляемые на сервер для обновления:', data);
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  create(service: Service): Observable<Service> {
+    return this.http.post<Service>(this.apiUrl, service);
+  }
 }
