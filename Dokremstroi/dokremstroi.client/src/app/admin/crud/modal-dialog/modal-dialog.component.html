@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <ng-container *ngFor="let field of data.fields">
-      <mat-form-field appearance="fill" class="full-width">
+      <mat-form-field *ngIf="field.type !== 'file' && field.type !== 'checkbox'" appearance="fill" class="full-width">
         <mat-label>{{ field.label }}</mat-label>
         <ng-container [ngSwitch]="field.type">
           <input *ngSwitchCase="'text'"
@@ -17,9 +17,22 @@
                  matInput
                  [formControlName]="field.name"
                  [type]="field.type" />
-          <!-- Можно добавить другие типы -->
+          <input *ngSwitchCase="'date'"
+                 matInput
+                 [formControlName]="field.name"
+                 [type]="field.type" />
+          <!-- Добавьте другие типы здесь -->
         </ng-container>
       </mat-form-field>
+      <div *ngIf="field.type === 'checkbox'">
+        <mat-checkbox [formControlName]="field.name">{{ field.label }}</mat-checkbox>
+      </div>
+      <div *ngIf="field.type === 'file'">
+        <label>{{ field.label }}</label>
+        <input type="file"
+               (change)="onFileSelected($event)"
+               multiple />
+      </div>
     </ng-container>
   </form>
 </mat-dialog-content>

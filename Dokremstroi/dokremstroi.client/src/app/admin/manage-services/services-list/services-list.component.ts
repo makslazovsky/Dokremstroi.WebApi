@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ServiceManager } from '../../../managers/service.manager';
 import { Service } from '../../../models/service.model';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../crud/confirmation-dialog/confirmation-dialog.component';
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -45,7 +46,6 @@ export class ServicesListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Добавляем ID в объект результата
         const updatedService = { ...result, id: service.id };
 
         console.log('Обновленные данные с ID:', updatedService);
@@ -69,17 +69,15 @@ export class ServicesListComponent implements OnInit {
   }
 
   onDelete(service: Service): void {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: {
-        title: 'Удаление услуги',
-        content: `Вы уверены, что хотите удалить услугу "${service.name}"?`,
-        actions: ['Удалить', 'Отмена']
+        message: `Вы уверены, что хотите удалить услугу "${service.name}"?`
       }
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.action === 'Удалить') {
+      if (result === true) {
         this.serviceManager.delete(service.id).subscribe({
           next: () => {
             alert('Услуга успешно удалена!');
@@ -117,6 +115,5 @@ export class ServicesListComponent implements OnInit {
       }
     });
   }
-
 
 }

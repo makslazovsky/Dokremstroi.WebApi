@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { CompletedOrderManager } from '../managers/completed-order.service';
+import { CompletedOrderManager } from '../managers/completed-order.manager';
 
 @Component({
   selector: 'app-completed-orders',
@@ -18,7 +18,7 @@ export class CompletedOrdersComponent implements OnInit {
 
   ngOnInit(): void {
     // Загрузка данных из менеджера
-    this.completedOrderManager.getCompletedOrders().subscribe((data) => {
+    this.completedOrderManager.getAll().subscribe((data) => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
     });

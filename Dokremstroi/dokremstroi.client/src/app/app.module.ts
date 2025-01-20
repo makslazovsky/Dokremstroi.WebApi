@@ -19,30 +19,24 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ManageContactsComponent } from './admin/manage-contacts/manage-contacts.component';
-import { ManageServicesComponent } from './admin/manage-services/manage-services.component';
-import { ManageReviewsComponent } from './admin/manage-reviews/manage-reviews.component';
 import { ManageMainComponent } from './admin/manage-main/manage-main.component';
-import { ManageCompletedOrdersComponent } from './admin/manage-completed-orders/manage-completed-orders.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CompletedOrdersListComponent } from './admin/manage-completed-orders/completed-orders-list/completed-orders-list.component';
-import { CompletedOrdersEditComponent } from './admin/manage-completed-orders/completed-orders-edit/completed-orders-edit.component';
-import { ContactsListComponent } from './admin/manage-contacts/contacts-list/contacts-list.component';
-import { ContactsEditComponent } from './admin/manage-contacts/contacts-edit/contacts-edit.component';
 import { ReviewsListComponent } from './admin/manage-reviews/reviews-list/reviews-list.component';
-import { ReviewsEditComponent } from './admin/manage-reviews/reviews-edit/reviews-edit.component';
 import { ServicesListComponent } from './admin/manage-services/services-list/services-list.component';
-import { ServicesEditComponent } from './admin/manage-services/services-edit/services-edit.component';
 import { ModalDialogComponent } from './admin/crud/modal-dialog/modal-dialog.component';
 import { TableComponent } from './admin/crud/table/table.component';
 import { PaginationComponent } from './admin/crud/pagination/pagination.component';
-
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ConfirmationDialogComponent } from './admin/crud/confirmation-dialog/confirmation-dialog.component';
+import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
 
 
 @NgModule({
@@ -61,21 +55,15 @@ import { ReactiveFormsModule } from '@angular/forms';
     AdminDashboardComponent,
     UserDashboardComponent,
     ManageContactsComponent,
-    ManageServicesComponent,
-    ManageReviewsComponent,
     ManageMainComponent,
-    ManageCompletedOrdersComponent,
     CompletedOrdersListComponent,
-    CompletedOrdersEditComponent,
-    ContactsListComponent,
-    ContactsEditComponent,
     ReviewsListComponent,
-    ReviewsEditComponent,
     ServicesListComponent,
-    ServicesEditComponent,
     ModalDialogComponent,
     TableComponent,
-    PaginationComponent
+    PaginationComponent,
+    ConfirmationDialogComponent,
+    MainPageBlocksComponent
 
   ],
   imports: [
@@ -86,6 +74,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule, // Добавлено
     MatInputModule, // Добавлено
     MatButtonModule, // Добавлено
+    MatCheckboxModule,
     ReactiveFormsModule,
     BrowserModule, HttpClientModule,
     AppRoutingModule,
@@ -96,5 +85,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AuthGuard
   ],
   bootstrap: [AppComponent]
+
 })
+
 export class AppModule { }

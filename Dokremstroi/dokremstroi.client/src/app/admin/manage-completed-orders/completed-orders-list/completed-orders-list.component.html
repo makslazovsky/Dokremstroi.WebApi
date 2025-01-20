@@ -1,1 +1,5 @@
-<p>completed-orders-list works!</p>
+<app-table [data]="completedOrders"
+           [columns]="columns"
+           (edit)="onEdit($event)"
+           (delete)="onDelete($event)"></app-table>
+<button mat-button color="primary" (click)="onCreate()">Добавить заказ</button>

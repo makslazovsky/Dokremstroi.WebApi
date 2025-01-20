@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dokremstroi.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,6 +40,22 @@ namespace Dokremstroi.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ContactInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MainPageBlocks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MainPageBlocks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,6 +206,9 @@ namespace Dokremstroi.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ContactInfos");
+
+            migrationBuilder.DropTable(
+                name: "MainPageBlocks");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

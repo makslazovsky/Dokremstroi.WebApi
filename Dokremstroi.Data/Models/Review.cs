@@ -16,6 +16,6 @@ namespace Dokremstroi.Data.Models
         public bool IsApproved { get; set; } // Признак, был ли отзыв подтвержден
 
         // Навигационные свойства
-        public Service Service { get; set; }
+        public Service? Service { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dokremstroi.Data.Migrations
 {
     [DbContext(typeof(DokremstroiContext))]
-    [Migration("20250107131301_init2")]
-    partial class init2
+    [Migration("20250117153849_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

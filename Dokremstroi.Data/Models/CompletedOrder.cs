@@ -11,7 +11,7 @@ namespace Dokremstroi.Data.Models
         public int Id { get; set; }
         public string ProjectName { get; set; } // Название проекта или объекта
         public DateTime CompletionDate { get; set; } // Дата завершения
-        public List<CompletedOrderImage> Images { get; set; } // Промежуточная таблица для изображений
+        public List<CompletedOrderImage>? Images { get; set; } // Промежуточная таблица для изображений
     }
 
 }

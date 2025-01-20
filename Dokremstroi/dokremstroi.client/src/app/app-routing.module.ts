@@ -10,11 +10,10 @@ import { RegisterComponent } from './register/register.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { ManageContactsComponent } from './admin/manage-contacts/manage-contacts.component';
-import { ManageServicesComponent } from './admin/manage-services/manage-services.component';
 import { ServicesListComponent } from './admin/manage-services/services-list/services-list.component';
-import { ManageReviewsComponent } from './admin/manage-reviews/manage-reviews.component';
-import { ManageMainComponent } from './admin/manage-main/manage-main.component';
-import { ManageCompletedOrdersComponent } from './admin/manage-completed-orders/manage-completed-orders.component'; // Новый компонент
+import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
+import { ReviewsListComponent } from './admin/manage-reviews/reviews-list/reviews-list.component'
+import { CompletedOrdersListComponent } from './admin/manage-completed-orders/completed-orders-list/completed-orders-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
@@ -33,12 +32,6 @@ const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },
-  //{
-  //  path: 'admin/manage-services',
-  //  component: ManageServicesComponent,
-  //  canActivate: [AuthGuard, RoleGuard],
-  //  data: { roles: ['Admin'] }
-  //},
   {
     path: 'admin/manage-services',
     component: ServicesListComponent,
@@ -47,19 +40,19 @@ const routes: Routes = [
   },
   {
     path: 'admin/manage-reviews',
-    component: ManageReviewsComponent,
+    component: ReviewsListComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },
   {
     path: 'admin/manage-main',
-    component: ManageMainComponent,
+    component: MainPageBlocksComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },
   {
     path: 'admin/manage-completed-orders', // Новый маршрут
-    component: ManageCompletedOrdersComponent,
+    component: CompletedOrdersListComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },

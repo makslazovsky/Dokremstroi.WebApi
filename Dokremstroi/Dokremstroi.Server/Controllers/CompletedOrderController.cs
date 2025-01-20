@@ -29,8 +29,11 @@ namespace Dokremstroi.Server.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Посмотрите, что именно возвращается
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
+                Console.WriteLine("Validation errors: " + string.Join(", ", errors));
+                return BadRequest(ModelState);
             }
+
             // Сохраняем выполненный заказ
             await _completedOrderManager.AddAsync(order);
 
@@ -62,11 +65,93 @@ namespace Dokremstroi.Server.Controllers
             return Ok(order);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, [FromBody] CompletedOrder order)
+        {
+            if (order == null)
+            {
+                return BadRequest("Order is null.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingOrder = await _completedOrderManager.GetByIdAsync(id);
+            if (existingOrder == null)
+            {
+                return NotFound($"Order with ID {id} not found.");
+            }
+
+            if (id != order.Id)
+            {
+                return BadRequest("ID из маршрута не совпадает с ID из объекта.");
+            }
+
+            // Обновите только изменённые свойства
+            existingOrder.ProjectName = order.ProjectName;
+            existingOrder.CompletionDate = order.CompletionDate;
+            existingOrder.Images = order.Images;
+
+            // Обновляем основные данные заказа
+            await _completedOrderManager.UpdateAsync(existingOrder);
+
+            // Обновляем изображения
+            if (order.Images != null && order.Images.Any())
+            {
+                var existingImages = existingOrder.Images ?? new List<CompletedOrderImage>();
+
+                // Удаляем отсутствующие изображения
+                var imagesToRemove = existingImages.Where(img => !order.Images.Any(newImg => newImg.Id == img.Id)).ToList();
+                foreach (var img in imagesToRemove)
+                {
+                    await _imageManager.DeleteAsync(img.Id);
+                }
+
+                // Добавляем или обновляем изображения
+                foreach (var newImage in order.Images)
+                {
+                    if (newImage.Id == 0)
+                    {
+                        newImage.CompletedOrderId = id;
+                        await _imageManager.AddAsync(newImage);
+                    }
+                    else
+                    {
+                        var existingImage = existingImages.FirstOrDefault(img => img.Id == newImage.Id);
+                        if (existingImage != null)
+                        {
+                            existingImage.ImageUrl = newImage.ImageUrl;
+                            await _imageManager.UpdateAsync(existingImage);
+                        }
+                    }
+                }
+            }
+
+            return NoContent();
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompletedOrder>>> GetAll()
         {
             var orders = await _completedOrderManager.GetAllAsync();
             return Ok(orders);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var order = await _completedOrderManager.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            await _completedOrderManager.DeleteAsync(id);
+            return NoContent();
+        }
+
     }
 }

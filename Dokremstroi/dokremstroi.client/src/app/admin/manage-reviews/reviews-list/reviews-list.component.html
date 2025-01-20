@@ -1,1 +1,6 @@
-<p>reviews-list works!</p>
+<app-table [data]="paginatedReviews"
+           [columns]="columns"
+           (edit)="onEdit($event)"
+           (delete)="onDelete($event)">
+</app-table>
+  <button mat-button color="primary" (click)="onCreate()">Добавить отзыв</button>
