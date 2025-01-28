@@ -19,7 +19,6 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuard } from './guards/auth.guard';
 import { ManageContactsComponent } from './admin/manage-contacts/manage-contacts.component';
-import { ManageMainComponent } from './admin/manage-main/manage-main.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,6 +36,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from './admin/crud/confirmation-dialog/confirmation-dialog.component';
 import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
+import { QuillModule } from 'ngx-quill';
+import { UserListComponent } from './admin/manage-users/users-list/users-list.component';
 
 
 @NgModule({
@@ -55,7 +56,6 @@ import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/ma
     AdminDashboardComponent,
     UserDashboardComponent,
     ManageContactsComponent,
-    ManageMainComponent,
     CompletedOrdersListComponent,
     ReviewsListComponent,
     ServicesListComponent,
@@ -63,7 +63,8 @@ import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/ma
     TableComponent,
     PaginationComponent,
     ConfirmationDialogComponent,
-    MainPageBlocksComponent
+    MainPageBlocksComponent,
+    UserListComponent
 
   ],
   imports: [
@@ -78,7 +79,8 @@ import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/ma
     ReactiveFormsModule,
     BrowserModule, HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    QuillModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

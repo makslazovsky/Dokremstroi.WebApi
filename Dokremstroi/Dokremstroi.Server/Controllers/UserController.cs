@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -31,6 +32,12 @@ namespace Dokremstroi.Server.Controllers
             if (string.IsNullOrEmpty(dto.Username) || string.IsNullOrEmpty(dto.Password) || dto.Password.Length < 6)
             {
                 return ApiResponse(false, "Email и пароль обязательны. Пароль должен быть длиной не менее 6 символов.");
+            }
+
+            // Добавляем валидацию email
+            if (!IsValidEmail(dto.Username))
+            {
+                return ApiResponse(false, "Невалидный email.");
             }
 
             try
@@ -88,7 +95,6 @@ namespace Dokremstroi.Server.Controllers
             });
         }
 
-
         // Метод для генерации JWT
         private string GenerateJwtToken(User user)
         {
@@ -97,9 +103,9 @@ namespace Dokremstroi.Server.Controllers
 
             var claims = new[]
             {
-        new Claim(ClaimTypes.Name, user.Username),
-        new Claim(ClaimTypes.Role, user.Role)
-    };
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
 
             var token = new JwtSecurityToken(
                 issuer: "DokremstroiApp",
@@ -111,9 +117,17 @@ namespace Dokremstroi.Server.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        // Метод для валидации email
+        private bool IsValidEmail(string email)
+        {
+            var emailAttribute = new EmailAddressAttribute();
+            return emailAttribute.IsValid(email);
         }
 
         private IActionResult ApiResponse(bool success, string message, object? data = null)

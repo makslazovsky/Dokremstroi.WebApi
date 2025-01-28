@@ -1,0 +1,150 @@
+:host {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: auto;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+mat-form-field,
+.quill-editor {
+  width: 100%;
+}
+
+.mat-form-field {
+  margin-bottom: 20px;
+}
+
+.mat-dialog-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mat-button,
+.mat-raised-button {
+  padding: 10px 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+::ng-deep .mat-form-field-label {
+  z-index: 1;
+  background-color: white;
+  padding: 0 5px;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-label-wrapper {
+  background-color: white;
+  padding: 0 5px;
+  transform: translateY(-50%);
+  top: 0;
+}
+
+::ng-deep .mat-input-element {
+  margin-bottom: 1px;
+}
+
+.mat-form-field .mat-form-field-flex {
+  align-items: baseline;
+}
+
+.mat-dialog-container {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+}
+
+button {
+  background-color: #2196f3 !important;
+  color: white !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+  button:hover {
+    background-color: #1976d2 !important;
+  }
+
+  button:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed !important;
+  }
+
+  button.mat-button,
+  button.mat-raised-button {
+    margin-right: 10px;
+    min-width: 100px;
+    background-color: #2196f3 !important; /* Убедимся, что цвет фона задан */
+    color: white !important;
+    font-size: 16px;
+  }
+
+    button.mat-button.mat-primary,
+    button.mat-raised-button.mat-primary {
+      background-color: #2196f3 !important;
+      color: white !important;
+    }
+
+      button.mat-button.mat-primary:hover,
+      button.mat-raised-button.mat-primary:hover {
+        background-color: #1976d2 !important;
+      }
+
+/* Добавим этот стиль */
+::ng-deep .mat-mdc-text-field-wrapper::before {
+  content: '' !important;
+}
+
+/* Forced Colors Mode */
+@media (forced-colors: active) {
+  * {
+    forced-color-adjust: auto !important;
+  }
+
+  button {
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+
+  .mat-form-field-appearance-fill .mat-form-field-flex .mat-form-field-infix {
+    background-color: Canvas !important;
+    color: CanvasText !important;
+  }
+
+  .mat-form-field-label {
+    color: CanvasText !important;
+  }
+
+  .mat-checkbox .mat-checkbox-frame {
+    border-color: Highlight !important;
+  }
+}

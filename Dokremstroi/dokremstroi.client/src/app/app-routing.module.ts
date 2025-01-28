@@ -14,6 +14,7 @@ import { ServicesListComponent } from './admin/manage-services/services-list/ser
 import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
 import { ReviewsListComponent } from './admin/manage-reviews/reviews-list/reviews-list.component'
 import { CompletedOrdersListComponent } from './admin/manage-completed-orders/completed-orders-list/completed-orders-list.component';
+import { UserListComponent } from './admin/manage-users/users-list/users-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
@@ -53,6 +54,12 @@ const routes: Routes = [
   {
     path: 'admin/manage-completed-orders', // Новый маршрут
     component: CompletedOrdersListComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] }
+  },
+  {
+    path: 'admin/manage-users', // Новый маршрут
+    component: UserListComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },

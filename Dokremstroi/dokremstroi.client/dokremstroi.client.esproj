@@ -9,5 +9,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\app\admin\crud\" />
+    <Folder Include="src\app\admin\manage-users\" />
   </ItemGroup>
 </Project>

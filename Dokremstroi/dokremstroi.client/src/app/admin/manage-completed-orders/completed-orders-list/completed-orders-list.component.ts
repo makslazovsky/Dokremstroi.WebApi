@@ -7,6 +7,7 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 @Component({
   selector: 'app-completed-orders-list',
   templateUrl: './completed-orders-list.component.html',
+  styleUrls: ['./completed-orders-list.component.css']
 })
 export class CompletedOrdersListComponent implements OnInit {
   completedOrders: CompletedOrder[] = [];

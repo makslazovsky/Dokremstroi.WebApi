@@ -1,6 +1,8 @@
-<app-table [data]="paginatedReviews"
-           [columns]="columns"
-           (edit)="onEdit($event)"
-           (delete)="onDelete($event)">
-</app-table>
+<div class="actions">
   <button mat-button color="primary" (click)="onCreate()">Добавить отзыв</button>
+</div>
+  <app-table [data]="paginatedReviews"
+             [columns]="columns"
+             (edit)="onEdit($event)"
+             (delete)="onDelete($event)">
+  </app-table>

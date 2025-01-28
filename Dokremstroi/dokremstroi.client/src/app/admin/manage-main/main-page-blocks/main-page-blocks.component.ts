@@ -38,7 +38,7 @@ export class MainPageBlocksComponent implements OnInit {
         title: 'Редактирование блока',
         fields: [
           { name: 'title', label: 'Заголовок', type: 'text', required: true },
-          { name: 'content', label: 'Содержимое', type: 'textarea', required: true },
+          { name: 'content', label: 'Содержимое', type: 'wysiwyg', required: true },
           { name: 'imageUrl', label: 'Ссылка на изображение', type: 'text', required: false },
           { name: 'order', label: 'Порядок', type: 'number', required: true },
         ],
@@ -83,7 +83,7 @@ export class MainPageBlocksComponent implements OnInit {
         title: 'Добавление нового блока',
         fields: [
           { name: 'title', label: 'Заголовок', type: 'text', required: true },
-          { name: 'content', label: 'Содержимое', type: 'textarea', required: true },
+          { name: 'content', label: 'Содержимое', type: 'wysiwyg', required: true },
           { name: 'imageUrl', label: 'Ссылка на изображение', type: 'text', required: false },
           { name: 'order', label: 'Порядок', type: 'number', required: true },
         ],

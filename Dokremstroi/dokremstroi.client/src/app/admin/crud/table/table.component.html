@@ -1,16 +1,19 @@
 <table>
   <thead>
-  <tr>
-    <th *ngFor="let col of columns">{{ col }}
-  </th>
-    <th>Actions</th>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{ col }}
+      </th>
+      <th>Actions</th>
     </tr>
   </thead>
-  <tbody> <tr *ngFor="let item of data">
-    <td *ngFor="let col of columns">{{ item[col] }}</td>
-    <td> <button (click)="onEdit(item)">Edit</button>
-    <button (click)="onDelete(item)">Delete</button>
+  <tbody>
+    <tr *ngFor="let item of data">
+      <td *ngFor="let col of columns">{{ item[col] }}</td>
+      <td class="actions">
+        <button (click)="onEdit(item)">Edit</button>
+        <button (click)="onDelete(item)">Delete</button>
       </td>
-     </tr>
-    </tbody>
+    </tr>
+  </tbody>
 </table>

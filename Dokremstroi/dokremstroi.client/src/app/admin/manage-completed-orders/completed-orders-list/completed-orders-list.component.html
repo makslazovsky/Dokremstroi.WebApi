@@ -1,5 +1,8 @@
-<app-table [data]="completedOrders"
-           [columns]="columns"
-           (edit)="onEdit($event)"
-           (delete)="onDelete($event)"></app-table>
-<button mat-button color="primary" (click)="onCreate()">Добавить заказ</button>
+<div class="actions">
+  <button mat-button color="primary" (click)="onCreate()">Добавить заказ</button>
+</div>
+  <app-table [data]="completedOrders"
+             [columns]="columns"
+             (edit)="onEdit($event)"
+             (delete)="onDelete($event)">
+  </app-table>

@@ -28,13 +28,23 @@ namespace Dokremstroi.Server.Controllers
             var item = (await _manager.GetAllAsync()).FirstOrDefault();
             if (item == null)
             {
-                return NotFound();
+                // Создаем запись с стандартными значениями
+                var defaultContactInfo = new ContactInfo
+                {
+                    Address = "123 Standard St, Standard City",
+                    PhoneNumber = "123-456-7890",
+                    Email = "example@domain.com",
+                    MapLink = "http://maps.example.com",
+                    BankDetails = "Bank: Standard Bank, Account: 12345678"
+                };
+
+                await _manager.AddAsync(defaultContactInfo);
+                item = defaultContactInfo;
             }
+
             return Ok(item);
         }
-
 
         // Вы можете оставить другие методы, если в будущем понадобится их использовать
     }
 }
-

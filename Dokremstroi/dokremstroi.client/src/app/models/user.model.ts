@@ -1,6 +1,7 @@
+// models/user.model.ts
 export interface User {
   id?: number;
   username: string;
-  password: string;
-  email: string;
+  passwordHash: string;
+  role: string;
 }

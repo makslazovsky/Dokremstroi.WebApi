@@ -3,31 +3,35 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <ng-container *ngFor="let field of data.fields">
-      <mat-form-field *ngIf="field.type !== 'file' && field.type !== 'checkbox'" appearance="fill" class="full-width">
-        <mat-label>{{ field.label }}</mat-label>
+      <div *ngIf="field.type !== 'file' && field.type !== 'checkbox'" class="full-width">
         <ng-container [ngSwitch]="field.type">
-          <input *ngSwitchCase="'text'"
-                 matInput
-                 [formControlName]="field.name"
-                 [type]="field.type" />
-          <textarea *ngSwitchCase="'textarea'"
-                    matInput
-                    [formControlName]="field.name"></textarea>
-          <input *ngSwitchCase="'number'"
-                 matInput
-                 [formControlName]="field.name"
-                 [type]="field.type" />
-          <input *ngSwitchCase="'date'"
-                 matInput
-                 [formControlName]="field.name"
-                 [type]="field.type" />
-          <!-- Добавьте другие типы здесь -->
+          <mat-form-field *ngSwitchCase="'text'" appearance="fill" class="full-width">
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [formControlName]="field.name" [type]="field.type" />
+          </mat-form-field>
+          <mat-form-field *ngSwitchCase="'textarea'" appearance="fill" class="full-width">
+            <mat-label>{{ field.label }}</mat-label>
+            <textarea matInput [formControlName]="field.name"></textarea>
+          </mat-form-field>
+          <div *ngSwitchCase="'wysiwyg'" class="full-width">
+            <label>{{ field.label }}</label>
+            <quill-editor [formControlName]="field.name" class="quill-editor"></quill-editor>
+          </div>
+          <mat-form-field *ngSwitchCase="'number'" appearance="fill" class="full-width">
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [formControlName]="field.name" [type]="field.type" />
+          </mat-form-field>
+          <mat-form-field *ngSwitchCase="'date'" appearance="fill" class="full-width">
+            <mat-label>{{ field.label }}</mat-label>
+            <input matInput [formControlName]="field.name" [type]="field.type" />
+          </mat-form-field>
         </ng-container>
-      </mat-form-field>
-      <div *ngIf="field.type === 'checkbox'">
+      </div>
+
+      <div *ngIf="field.type === 'checkbox'" class="full-width">
         <mat-checkbox [formControlName]="field.name">{{ field.label }}</mat-checkbox>
       </div>
-      <div *ngIf="field.type === 'file'">
+      <div *ngIf="field.type === 'file'" class="full-width">
         <label>{{ field.label }}</label>
         <input type="file"
                (change)="onFileSelected($event)"

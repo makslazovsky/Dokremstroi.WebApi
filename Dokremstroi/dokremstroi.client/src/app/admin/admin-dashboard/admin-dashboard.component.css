@@ -8,15 +8,18 @@
   text-align: center;
 }
 
-h2 {
-  margin-bottom: 2rem;
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.button-group {
+.admin-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
+  align-items: center;
 }
 
 button {
@@ -27,13 +30,26 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  flex: 1;
+  min-width: 200px; /* Установим минимальную ширину для кнопок */
+  max-width: 250px; /* Установим максимальную ширину для кнопок */
 }
+
+  button:not(:last-child) {
+    margin-right: 10px; /* Добавим разделители между кнопками */
+  }
 
   button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
   }
 
   button:focus {
     outline: none;
+  }
+
+  button:active {
+    background-color: #003f7f;
+    transform: translateY(0);
   }

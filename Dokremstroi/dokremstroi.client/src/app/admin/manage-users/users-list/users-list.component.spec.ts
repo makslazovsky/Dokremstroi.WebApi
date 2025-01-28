@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManageMainComponent } from './manage-main.component';
+import { UsersListComponent } from './users-list.component';
 
-describe('ManageMainComponent', () => {
-  let component: ManageMainComponent;
-  let fixture: ComponentFixture<ManageMainComponent>;
+describe('UsersListComponent', () => {
+  let component: UsersListComponent;
+  let fixture: ComponentFixture<UsersListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ManageMainComponent]
+      declarations: [UsersListComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ManageMainComponent);
+    fixture = TestBed.createComponent(UsersListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
