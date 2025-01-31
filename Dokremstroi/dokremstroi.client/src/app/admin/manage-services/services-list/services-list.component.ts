@@ -13,6 +13,11 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 export class ServicesListComponent implements OnInit {
   services: Service[] = [];
   columns: string[] = ['name', 'description', 'price'];
+  columnNames: { [key: string]: string } = {
+    name: 'Название',
+    description: 'Описание',
+    price: 'Цена'
+  };
 
   constructor(private serviceManager: ServiceManager, private dialog: MatDialog) { }
 

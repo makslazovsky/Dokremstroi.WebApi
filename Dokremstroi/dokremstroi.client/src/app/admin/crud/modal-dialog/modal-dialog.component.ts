@@ -42,14 +42,7 @@ export class ModalDialogComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       const formData = this.form.value;
-      if (this.selectedFiles.length) {
-        formData.images = this.selectedFiles.map(file => ({
-          imageUrl: URL.createObjectURL(file),
-          completedOrderId: this.data.initialValues?.id || 0,
-        }));
-      } else {
-        formData.images = []; // Передача пустого массива, если изображения отсутствуют
-      }
+      formData.images = this.selectedFiles;
       this.dialogRef.close(formData);
     }
   }

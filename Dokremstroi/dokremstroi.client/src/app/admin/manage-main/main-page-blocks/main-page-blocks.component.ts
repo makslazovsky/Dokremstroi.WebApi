@@ -12,6 +12,13 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 export class MainPageBlocksComponent implements OnInit {
   blocks: MainPageBlock[] = [];
   columns: string[] = ['id', 'title', 'content', 'imageUrl', 'order'];
+  columnNames: { [key: string]: string } = {
+    id: 'ID',
+    title: 'Заголовок',
+    content: 'Содержимое',
+    imageUrl: 'Ссылка на изображение',
+    order: 'Порядок отображения'
+  };
   currentPage: number = 1;
   itemsPerPage: number = 10;
 

@@ -1,8 +1,9 @@
 <div class="actions">
   <button mat-button color="primary" (click)="onCreate()">Добавить пользователя</button>
 </div>
-<app-table [data]="paginatedUsers"
+<app-table [data]="users"
            [columns]="columns"
+           [columnNames]="columnNames"
            (edit)="onEdit($event)"
            (delete)="onDelete($event)">
 </app-table>

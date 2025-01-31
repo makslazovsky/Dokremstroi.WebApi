@@ -3,6 +3,7 @@
 </div>
   <app-table [data]="paginatedReviews"
              [columns]="columns"
+             [columnNames]="columnNames"
              (edit)="onEdit($event)"
              (delete)="onDelete($event)">
   </app-table>

@@ -8,6 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class TableComponent {
   @Input() data: any[] = [];
   @Input() columns: string[] = [];
+  @Input() columnNames: { [key: string]: string } = {};
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
 

@@ -12,6 +12,14 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 export class ReviewsListComponent implements OnInit {
   reviews: Review[] = [];
   columns: string[] = ['id', 'userId', 'serviceId', 'comment', 'rating', 'isApproved'];
+  columnNames: { [key: string]: string } = {
+    id: 'ID',
+    userId: 'Идентификатор пользователя',
+    serviceId: 'Идентификатор услуги',
+    comment: 'Комментарий',
+    rating: 'Оценка',
+    isApproved: 'Подтвержден'
+  };
   currentPage: number = 1;
   itemsPerPage: number = 10;
 

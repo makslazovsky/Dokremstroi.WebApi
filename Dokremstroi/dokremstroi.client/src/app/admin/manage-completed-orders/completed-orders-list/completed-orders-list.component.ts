@@ -12,6 +12,11 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 export class CompletedOrdersListComponent implements OnInit {
   completedOrders: CompletedOrder[] = [];
   columns: string[] = ['id', 'projectName', 'completionDate'];
+  columnNames: { [key: string]: string } = {
+    id: 'ID',
+    projectName: 'Название проекта',
+    completionDate: 'Дата завершения'
+  };
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
@@ -31,7 +36,7 @@ export class CompletedOrdersListComponent implements OnInit {
     });
   }
 
-  onEdit(order: any): void {
+  onEdit(order: CompletedOrder): void {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '400px',
       data: {
@@ -53,28 +58,36 @@ export class CompletedOrdersListComponent implements OnInit {
           images: result.images || [],
         };
 
-        this.manager.update(order.id, updatedOrder).subscribe({
-          next: () => {
-            this.loadOrders();
-          },
-          error: (err) => console.error('Ошибка обновления заказа:', err),
-        });
+        const imageFiles: File[] = result.images;
+        if (imageFiles && imageFiles.length > 0) {
+          this.manager.update(order.id, updatedOrder, imageFiles).subscribe({
+            next: () => {
+              this.loadOrders();
+            },
+            error: (err) => console.error('Ошибка обновления заказа:', err),
+          });
+        } else {
+          this.manager.update(order.id, updatedOrder, []).subscribe({
+            next: () => {
+              this.loadOrders();
+            },
+            error: (err) => console.error('Ошибка обновления заказа:', err),
+          });
+        }
       }
     });
   }
 
-  onDelete(order: any): void {
-    if (!confirm('Вы уверены, что хотите удалить этот заказ?'))
-    {
+  onDelete(order: CompletedOrder): void {
+    if (!confirm('Вы уверены, что хотите удалить этот заказ?')) {
       return;
     }
     this.manager.delete(order.id).subscribe({
-      next: () =>
-      {
-        this.completedOrders = this.completedOrders.filter(o => o.id !== order.id); alert('Заказ удалён успешно.');
+      next: () => {
+        this.completedOrders = this.completedOrders.filter(o => o.id !== order.id);
+        alert('Заказ удалён успешно.');
       },
-      error: (err) =>
-        console.error('Ошибка удаления заказа:', err)
+      error: (err) => console.error('Ошибка удаления заказа:', err)
     });
   }
 
@@ -94,9 +107,14 @@ export class CompletedOrdersListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((createdOrder) => {
       if (createdOrder) {
         createdOrder.completionDate = new Date(createdOrder.completionDate).toISOString();
-        this.manager.create(createdOrder).subscribe(() => this.loadOrders());
+
+        const imageFiles: File[] = createdOrder.images;
+        if (imageFiles && imageFiles.length > 0) {
+          this.manager.create(createdOrder, imageFiles).subscribe(() => this.loadOrders());
+        } else {
+          this.manager.create(createdOrder, []).subscribe(() => this.loadOrders());
+        }
       }
     });
   }
-
 }

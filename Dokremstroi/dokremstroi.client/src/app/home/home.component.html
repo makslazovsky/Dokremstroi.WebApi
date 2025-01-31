@@ -1,2 +1,8 @@
 <h1>Добро пожаловать на наш сайт!</h1>
 <p>Это главная страница.</p>
+
+<div *ngFor="let block of blocks" class="block">
+  <h2>{{ block.title }}</h2>
+  <img *ngIf="block.imageUrl" [src]="block.imageUrl" alt="{{ block.title }}">
+  <div [innerHTML]="block.content"></div>
+</div>

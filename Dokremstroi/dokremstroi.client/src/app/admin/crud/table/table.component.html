@@ -2,17 +2,17 @@
   <thead>
     <tr>
       <th *ngFor="let col of columns">
-        {{ col }}
+        {{ columnNames[col] }}
       </th>
-      <th>Actions</th>
+      <th>Действия</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of data">
       <td *ngFor="let col of columns">{{ item[col] }}</td>
       <td class="actions">
-        <button (click)="onEdit(item)">Edit</button>
-        <button (click)="onDelete(item)">Delete</button>
+        <button (click)="onEdit(item)">Изменить</button>
+        <button (click)="onDelete(item)">Удалить</button>
       </td>
     </tr>
   </tbody>

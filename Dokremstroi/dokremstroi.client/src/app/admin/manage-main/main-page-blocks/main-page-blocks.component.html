@@ -1,8 +1,9 @@
 <div class="actions">
   <button mat-button color="primary" (click)="onCreate()">Добавить блок</button>
 </div>
-  <app-table [data]="paginatedBlocks"
-             [columns]="columns"
-             (edit)="onEdit($event)"
-             (delete)="onDelete($event)">
-  </app-table>
+<app-table [data]="paginatedBlocks"
+           [columns]="columns"
+           [columnNames]="columnNames"
+           (edit)="onEdit($event)"
+           (delete)="onDelete($event)">
+</app-table>

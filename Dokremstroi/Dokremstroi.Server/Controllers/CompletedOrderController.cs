@@ -3,6 +3,9 @@ using Dokremstroi.Services.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dokremstroi.Server.Controllers
 {
@@ -13,15 +16,21 @@ namespace Dokremstroi.Server.Controllers
     {
         private readonly ICompletedOrderManager _completedOrderManager;
         private readonly IManager<CompletedOrderImage> _imageManager;
+        private readonly string _uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 
         public CompletedOrderController(ICompletedOrderManager completedOrderManager, IManager<CompletedOrderImage> imageManager)
         {
             _completedOrderManager = completedOrderManager;
             _imageManager = imageManager;
+
+            if (!Directory.Exists(_uploadFolder))
+            {
+                Directory.CreateDirectory(_uploadFolder);
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] CompletedOrder order)
+        public async Task<ActionResult> Create([FromForm] CompletedOrder order, [FromForm] List<IFormFile> images)
         {
             if (order == null)
             {
@@ -38,18 +47,27 @@ namespace Dokremstroi.Server.Controllers
             await _completedOrderManager.AddAsync(order);
 
             // Сохраняем изображения (если есть)
-            if (order.Images != null && order.Images.Any())
+            if (images != null && images.Any())
             {
-                for (int i = 0; i < order.Images.Count; i++)
+                for (int i = 0; i < images.Count; i++)
                 {
-                    var image = order.Images[i];
-                    image.CompletedOrderId = order.Id; // Привязываем изображение к заказу
-                    image.CompletedOrder = null; // Убираем циклическую зависимость
+                    var imageFile = images[i];
+                    var fileName = Path.GetRandomFileName() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(_uploadFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    var image = new CompletedOrderImage
+                    {
+                        ImageUrl = $"uploads/{fileName}",
+                        CompletedOrderId = order.Id
+                    };
                     await _imageManager.AddAsync(image);
                 }
             }
-
-
             return CreatedAtAction(nameof(Get), new { id = order.Id }, order);
         }
 
@@ -61,23 +79,20 @@ namespace Dokremstroi.Server.Controllers
             {
                 return NotFound();
             }
-
             return Ok(order);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] CompletedOrder order)
+        public async Task<ActionResult> Update(int id, [FromForm] CompletedOrder order, [FromForm] List<IFormFile> images)
         {
             if (order == null)
             {
                 return BadRequest("Order is null.");
             }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             var existingOrder = await _completedOrderManager.GetByIdAsync(id);
             if (existingOrder == null)
             {
@@ -88,8 +103,6 @@ namespace Dokremstroi.Server.Controllers
             {
                 return BadRequest("ID из маршрута не совпадает с ID из объекта.");
             }
-
-            // Обновите только изменённые свойства
             existingOrder.ProjectName = order.ProjectName;
             existingOrder.CompletionDate = order.CompletionDate;
             existingOrder.Images = order.Images;
@@ -98,7 +111,7 @@ namespace Dokremstroi.Server.Controllers
             await _completedOrderManager.UpdateAsync(existingOrder);
 
             // Обновляем изображения
-            if (order.Images != null && order.Images.Any())
+            if (images != null && images.Any())
             {
                 var existingImages = existingOrder.Images ?? new List<CompletedOrderImage>();
 
@@ -110,28 +123,26 @@ namespace Dokremstroi.Server.Controllers
                 }
 
                 // Добавляем или обновляем изображения
-                foreach (var newImage in order.Images)
+                foreach (var imageFile in images)
                 {
-                    if (newImage.Id == 0)
+                    var fileName = Path.GetRandomFileName() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(_uploadFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        newImage.CompletedOrderId = id;
-                        await _imageManager.AddAsync(newImage);
+                        await imageFile.CopyToAsync(stream);
                     }
-                    else
+
+                    var image = new CompletedOrderImage
                     {
-                        var existingImage = existingImages.FirstOrDefault(img => img.Id == newImage.Id);
-                        if (existingImage != null)
-                        {
-                            existingImage.ImageUrl = newImage.ImageUrl;
-                            await _imageManager.UpdateAsync(existingImage);
-                        }
-                    }
+                        ImageUrl = $"uploads/{fileName}",
+                        CompletedOrderId = id
+                    };
+                    await _imageManager.AddAsync(image);
                 }
             }
-
             return NoContent();
         }
-
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompletedOrder>>> GetAll()
@@ -152,6 +163,5 @@ namespace Dokremstroi.Server.Controllers
             await _completedOrderManager.DeleteAsync(id);
             return NoContent();
         }
-
     }
 }

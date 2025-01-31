@@ -12,6 +12,12 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 export class UserListComponent implements OnInit {
   users: User[] = [];
   columns: string[] = ['id', 'username', 'role', 'passwordHash'];
+  columnNames: { [key: string]: string } = {
+    id: 'ID',
+    username: 'Имя пользователя',
+    role: 'Роль',
+    passwordHash: 'Хэш пароля'
+  };
   currentPage: number = 1;
   itemsPerPage: number = 10;
 

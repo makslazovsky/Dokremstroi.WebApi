@@ -19,12 +19,29 @@ export class CompletedOrderManager {
     return this.http.get<CompletedOrder>(`${this.apiUrl}/${id}`);
   }
 
-  create(order: CompletedOrder): Observable<CompletedOrder> {
-    return this.http.post<CompletedOrder>(this.apiUrl, order);
+  create(order: CompletedOrder, images: File[]): Observable<CompletedOrder> {
+    const formData: FormData = new FormData();
+    formData.append('projectName', order.projectName);
+    formData.append('completionDate', order.completionDate);
+
+    images.forEach(file => {
+      formData.append('images', file, file.name);
+    });
+
+    return this.http.post<CompletedOrder>(this.apiUrl, formData);
   }
 
-  update(id: number, order: CompletedOrder): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, order);
+  update(id: number, order: CompletedOrder, images: File[]): Observable<void> {
+    const formData: FormData = new FormData();
+    formData.append('id', order.id.toString());
+    formData.append('projectName', order.projectName);
+    formData.append('completionDate', order.completionDate);
+
+    images.forEach(file => {
+      formData.append('images', file, file.name);
+    });
+
+    return this.http.put<void>(`${this.apiUrl}/${id}`, formData);
   }
 
   delete(id: number): Observable<void> {
