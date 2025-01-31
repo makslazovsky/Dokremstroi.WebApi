@@ -31,6 +31,7 @@ input {
 button {
   width: 100%;
   padding: 0.5rem;
+  margin-top: 1rem; /* Добавляем отступ сверху */
   background-color: #007bff;
   color: white;
   border: none;
@@ -47,6 +48,7 @@ button {
   margin-top: 1rem;
   font-weight: bold;
 }
+
 .alert {
   padding: 10px;
   margin-top: 10px;
