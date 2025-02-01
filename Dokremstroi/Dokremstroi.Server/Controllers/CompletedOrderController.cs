@@ -82,6 +82,17 @@ namespace Dokremstroi.Server.Controllers
             return Ok(order);
         }
 
+        [HttpGet("{id}/images")]
+        public async Task<ActionResult<IEnumerable<CompletedOrderImage>>> GetImages(int id)
+        {
+            var images = await _imageManager.GetFilteredAsync(img => img.CompletedOrderId == id);
+            if (images == null || !images.Any())
+            {
+                return NotFound();
+            }
+            return Ok(images);
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromForm] CompletedOrder order, [FromForm] List<IFormFile> images)
         {

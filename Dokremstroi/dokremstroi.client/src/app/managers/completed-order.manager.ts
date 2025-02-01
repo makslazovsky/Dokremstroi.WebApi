@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CompletedOrder } from '../models/completed-order.model';
+import { CompletedOrder, CompletedOrderImage } from '../models/completed-order.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,10 @@ export class CompletedOrderManager {
 
   getById(id: number): Observable<CompletedOrder> {
     return this.http.get<CompletedOrder>(`${this.apiUrl}/${id}`);
+  }
+
+  getImagesByOrderId(orderId: number): Observable<CompletedOrderImage[]> {
+    return this.http.get<CompletedOrderImage[]>(`${this.apiUrl}/${orderId}/images`);
   }
 
   create(order: CompletedOrder, images: File[]): Observable<CompletedOrder> {

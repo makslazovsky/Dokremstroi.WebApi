@@ -3,6 +3,7 @@ using Dokremstroi.Data.Repositories;
 using Dokremstroi.Services.Managers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -93,6 +94,15 @@ var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+// Добавьте это для обслуживания файлов из папки uploads
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

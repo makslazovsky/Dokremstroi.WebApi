@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 import { CompletedOrderManager } from '../managers/completed-order.manager';
+import { CompletedOrder, CompletedOrderImage } from '../models/completed-order.model';
 
 @Component({
   selector: 'app-completed-orders',
@@ -9,18 +8,30 @@ import { CompletedOrderManager } from '../managers/completed-order.manager';
   styleUrls: ['./completed-orders.component.css']
 })
 export class CompletedOrdersComponent implements OnInit {
-  displayedColumns: string[] = ['projectName', 'completionDate'];
-  dataSource = new MatTableDataSource<any>([]);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  completedOrders: CompletedOrder[] = [];
 
   constructor(private completedOrderManager: CompletedOrderManager) { }
 
   ngOnInit(): void {
-    // Загрузка данных из менеджера
-    this.completedOrderManager.getAll().subscribe((data) => {
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
+    this.completedOrderManager.getAll().subscribe((orders) => {
+      this.completedOrders = orders;
+      this.completedOrders.forEach(order => {
+        this.completedOrderManager.getImagesByOrderId(order.id).subscribe((images) => {
+          order.images = images;
+        });
+      });
     });
+  }
+
+  getImageUrl(imageUrl: string): string {
+    const fullUrl = `https://localhost:7139/${imageUrl}`;
+    console.log(`Полный URL изображения: ${fullUrl}`);
+    return fullUrl;
+  }
+
+  imageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    console.error(`Ошибка загрузки изображения: ${target.src}`);
+    target.alt = 'Image not found';
   }
 }
