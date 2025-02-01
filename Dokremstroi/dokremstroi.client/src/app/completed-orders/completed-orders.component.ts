@@ -3,9 +3,10 @@ import { CompletedOrderManager } from '../managers/completed-order.manager';
 import { CompletedOrder, CompletedOrderImage } from '../models/completed-order.model';
 
 @Component({
-  selector: 'app-completed-orders',
-  templateUrl: './completed-orders.component.html',
-  styleUrls: ['./completed-orders.component.css']
+    selector: 'app-completed-orders',
+    templateUrl: './completed-orders.component.html',
+    styleUrls: ['./completed-orders.component.css'],
+    standalone: false
 })
 export class CompletedOrdersComponent implements OnInit {
   completedOrders: CompletedOrder[] = [];

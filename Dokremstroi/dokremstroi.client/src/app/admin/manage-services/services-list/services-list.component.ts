@@ -6,9 +6,10 @@ import { ConfirmationDialogComponent } from '../../crud/confirmation-dialog/conf
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-services-list',
-  templateUrl: './services-list.component.html',
-  styleUrls: ['./services-list.component.css']
+    selector: 'app-services-list',
+    templateUrl: './services-list.component.html',
+    styleUrls: ['./services-list.component.css'],
+    standalone: false
 })
 export class ServicesListComponent implements OnInit {
   services: Service[] = [];

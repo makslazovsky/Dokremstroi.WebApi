@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ContactInfo, ContactInfoService } from '../../managers/contact-info.manager';
 
 @Component({
-  selector: 'app-manage-contacts',
-  templateUrl: './manage-contacts.component.html',
-  styleUrls: ['./manage-contacts.component.css']
+    selector: 'app-manage-contacts',
+    templateUrl: './manage-contacts.component.html',
+    styleUrls: ['./manage-contacts.component.css'],
+    standalone: false
 })
 export class ManageContactsComponent implements OnInit {
   contactInfo: ContactInfo | null = null;

@@ -5,9 +5,10 @@ import { ReviewManager } from '../../../managers/review.manager';
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-reviews-list',
-  templateUrl: './reviews-list.component.html',
-  styleUrls: ['./reviews-list.component.css']
+    selector: 'app-reviews-list',
+    templateUrl: './reviews-list.component.html',
+    styleUrls: ['./reviews-list.component.css'],
+    standalone: false
 })
 export class ReviewsListComponent implements OnInit {
   reviews: Review[] = [];

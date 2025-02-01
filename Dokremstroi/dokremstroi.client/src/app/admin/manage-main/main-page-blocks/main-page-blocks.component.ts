@@ -5,9 +5,10 @@ import { MainPageBlockManager } from '../../../managers/main-page-blocks.manager
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-main-page-blocks',
-  templateUrl: './main-page-blocks.component.html',
-  styleUrls: ['./main-page-blocks.component.css']
+    selector: 'app-main-page-blocks',
+    templateUrl: './main-page-blocks.component.html',
+    styleUrls: ['./main-page-blocks.component.css'],
+    standalone: false
 })
 export class MainPageBlocksComponent implements OnInit {
   blocks: MainPageBlock[] = [];

@@ -5,9 +5,10 @@ import { CompletedOrderManager } from '../../../managers/completed-order.manager
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-completed-orders-list',
-  templateUrl: './completed-orders-list.component.html',
-  styleUrls: ['./completed-orders-list.component.css']
+    selector: 'app-completed-orders-list',
+    templateUrl: './completed-orders-list.component.html',
+    styleUrls: ['./completed-orders-list.component.css'],
+    standalone: false
 })
 export class CompletedOrdersListComponent implements OnInit {
   completedOrders: CompletedOrder[] = [];

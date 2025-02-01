@@ -5,9 +5,10 @@ import { UserManager } from '../../../managers/user.manager';
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-users-list',
-  templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.css']
+    selector: 'app-users-list',
+    templateUrl: './users-list.component.html',
+    styleUrls: ['./users-list.component.css'],
+    standalone: false
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
