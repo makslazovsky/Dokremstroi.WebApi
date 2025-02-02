@@ -1,14 +1,9 @@
-
-/* Footer */
 footer {
-  background-color: #00263b; /* Единый стиль с хедером */
+  background-color: #00263b;
   color: #ffffff;
-  padding: 10px 0;
   text-align: center;
-  position: fixed; /* Подвал как приклеенный */
-  bottom: 0; /* Фиксация снизу */
-  left: 0; /* К началу слева */
-  right: 0; /* Без отступов справа */
+  width: 100%;
+  margin-top: 10px;
 }
 
 

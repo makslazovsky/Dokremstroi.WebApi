@@ -2,10 +2,14 @@
   <div *ngFor="let order of completedOrders" class="completed-order-card">
     <h3>{{ order.projectName }}</h3>
     <p>{{ order.completionDate | date:'dd.MM.yyyy' }}</p>
-    <div class="order-images">
-      <div *ngFor="let image of order.images">
-        <img [src]="getImageUrl(image.imageUrl)" alt="{{ order.projectName }}" (error)="imageError($event)">
-      </div>
+    <div class="carousel-container" *ngIf="order.images.length > 0">
+      <owl-carousel-o [options]="slideOptions">
+        <ng-container *ngFor="let image of order.images; trackBy: trackByImageId">
+          <ng-template carouselSlide [id]="image.id.toString()">
+            <img [src]="getImageUrl(image.imageUrl)" alt="{{ order.projectName }}" (error)="imageError($event)" class="order-image">
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
     </div>
   </div>
 </div>

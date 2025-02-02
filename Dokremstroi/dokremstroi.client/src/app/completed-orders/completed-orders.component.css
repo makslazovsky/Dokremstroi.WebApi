@@ -1,7 +1,7 @@
 .completed-orders {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
   margin: 2rem 0;
 }
@@ -12,24 +12,42 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   text-align: center;
-  width: 300px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 }
 
-.order-images {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+.carousel-container {
+  width: 100%;
   margin-top: 1rem;
 }
 
-  .order-images div {
-    flex: 1 0 48%;
-    margin: 5px;
-    text-align: center;
-  }
+.order-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
 
-  .order-images img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
+.owl-carousel .owl-stage-outer {
+  display: flex;
+  justify-content: center;
+}
+
+.owl-carousel .owl-nav button.owl-prev,
+.owl-carousel .owl-nav button.owl-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+}
+
+.owl-carousel .owl-nav button.owl-prev {
+  left: -2rem;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+  right: -2rem;
+}

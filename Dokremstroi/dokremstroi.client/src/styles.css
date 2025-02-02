@@ -3,9 +3,28 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  min-height: 100vh; /* Минимальная высота экрана */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Дополнительно настраиваем box-sizing для всех элементов */
-*, *::before, *::after {
-  box-sizing: inherit;
+/* Основной контейнер */
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Растягиваем на всю высоту экрана */
+}
+
+/* Основной контент страницы */
+.main-content {
+  flex-grow: 1; /* Занимает всё свободное место */
+}
+
+/* Футер */
+app-footer {
+  background-color: #00263b;
+  color: #ffffff;
+  padding: 10px 0;
+  text-align: center;
+  width: 100%;
 }

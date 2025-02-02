@@ -38,6 +38,7 @@ import { ConfirmationDialogComponent } from './admin/crud/confirmation-dialog/co
 import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
 import { QuillModule } from 'ngx-quill';
 import { UserListComponent } from './admin/manage-users/users-list/users-list.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 
 @NgModule({
@@ -48,7 +49,6 @@ import { UserListComponent } from './admin/manage-users/users-list/users-list.co
     HeaderComponent,
     FooterComponent,
     ServicesComponent,
-    CompletedOrdersComponent,
     ReviewsComponent,
     ContactComponent,
     LoginComponent,
@@ -64,7 +64,7 @@ import { UserListComponent } from './admin/manage-users/users-list/users-list.co
     PaginationComponent,
     ConfirmationDialogComponent,
     MainPageBlocksComponent,
-    UserListComponent
+    UserListComponent,
 
   ],
   imports: [
@@ -80,7 +80,10 @@ import { UserListComponent } from './admin/manage-users/users-list/users-list.co
     BrowserModule, HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    CarouselModule,
+
+    CompletedOrdersComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

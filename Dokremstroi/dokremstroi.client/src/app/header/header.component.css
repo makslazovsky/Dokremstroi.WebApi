@@ -5,12 +5,17 @@
   box-sizing: border-box;
 }
 
+body {
+  overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
+}
+
 header {
   background: linear-gradient(to right, #0a2748, #004b7a);
   color: white;
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
 }
 
 .container {
