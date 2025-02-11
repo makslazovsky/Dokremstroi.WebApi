@@ -23,6 +23,11 @@ export class OrderManager {
     return this.http.get<UserOrderDto>(`${this.apiUrl}/${id}`);
   }
 
+  getPaged(page: number, pageSize: number, filter: string = '', orderBy: string = ''): Observable<{ items: UserOrderDto[], totalCount: number }> {
+    const url = `${this.apiUrl}/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`;
+    return this.http.get<{ items: UserOrderDto[], totalCount: number }>(url);
+  }
+
   update(id: number, order: UserOrderDto): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}`, order);
   }

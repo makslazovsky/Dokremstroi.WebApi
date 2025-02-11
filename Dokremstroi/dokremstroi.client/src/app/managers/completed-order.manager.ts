@@ -16,14 +16,8 @@ export class CompletedOrderManager {
     return this.http.get<CompletedOrder[]>(this.apiUrl);
   }
 
-  getPaged(filter: string | null, orderBy: string | null, page: number, pageSize: number): Observable<{ items: CompletedOrder[], totalCount: number }> {
-    let url = `${this.apiUrl}/paged?page=${page}&pageSize=${pageSize}`;
-    if (filter) {
-      url += `&filter=${encodeURIComponent(filter)}`;
-    }
-    if (orderBy) {
-      url += `&orderBy=${encodeURIComponent(orderBy)}`;
-    }
+  getPaged(page: number, pageSize: number, filter: string = '', orderBy: string = ''): Observable<{ items: CompletedOrder[], totalCount: number }> {
+    const url = `${this.apiUrl}/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`;
     return this.http.get<{ items: CompletedOrder[], totalCount: number }>(url);
   }
 

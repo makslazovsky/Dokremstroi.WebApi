@@ -7,7 +7,7 @@ import { Service } from '../models/service.model';
   providedIn: 'root',
 })
 export class ServiceManager {
-  private apiUrl = 'https://localhost:7139/api/service'; // Замените на правильный URL вашего API
+  private apiUrl = 'https://localhost:7139/api/service';
 
   constructor(private http: HttpClient) { }
 
@@ -19,13 +19,13 @@ export class ServiceManager {
     return this.http.get<Service>(`${this.apiUrl}/${id}`);
   }
 
-  update(id: number, service: Service): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, service);
+  getPaged(page: number, pageSize: number, filter: string = '', orderBy: string = ''): Observable<{ items: Service[], totalCount: number }> {
+    const url = `${this.apiUrl}/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`;
+    return this.http.get<{ items: Service[], totalCount: number }>(url);
   }
 
-  updateService(id: number, data: any): Observable<any> {
-    console.log('Данные, отправляемые на сервер для обновления:', data);
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  update(id: number, service: Service): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, service);
   }
 
   delete(id: number): Observable<void> {

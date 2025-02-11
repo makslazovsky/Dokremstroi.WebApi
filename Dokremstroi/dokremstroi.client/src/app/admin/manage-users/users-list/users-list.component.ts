@@ -5,10 +5,10 @@ import { UserManager } from '../../../managers/user.manager';
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-    selector: 'app-users-list',
-    templateUrl: './users-list.component.html',
-    styleUrls: ['./users-list.component.css'],
-    standalone: false
+  selector: 'app-users-list',
+  templateUrl: './users-list.component.html',
+  styleUrls: ['./users-list.component.css'],
+  standalone: false
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
@@ -21,6 +21,8 @@ export class UserListComponent implements OnInit {
   };
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = '';
 
   constructor(
     private manager: UserManager,
@@ -32,10 +34,24 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers(): void {
-    this.manager.getAll().subscribe({
-      next: (users) => (this.users = users),
+    const filter = this.searchQuery ? this.searchQuery : '';
+    const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
+    this.manager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+      next: (response) => {
+        this.users = response.items;
+        this.totalCount = response.totalCount;
+        this.updatePagination(); // Обновление пагинации
+      },
       error: (err) => console.error('Ошибка загрузки пользователей:', err),
     });
+  }
+
+  updatePagination(): void {
+    const totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
+    if (this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+      this.loadUsers();
+    }
   }
 
   onEdit(user: User): void {
@@ -103,13 +119,14 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  get paginatedUsers(): User[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.users.slice(startIndex, endIndex);
-  }
-
   onPageChange(page: number): void {
     this.currentPage = page;
+    this.loadUsers();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadUsers();
   }
 }
+

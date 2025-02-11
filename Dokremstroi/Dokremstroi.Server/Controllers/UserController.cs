@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 
@@ -24,9 +25,6 @@ namespace Dokremstroi.Server.Controllers
             _configuration = configuration;
         }
 
-        /// <summary>
-        /// Регистрация нового пользователя
-        /// </summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto dto)
         {
@@ -58,9 +56,36 @@ namespace Dokremstroi.Server.Controllers
             return ApiResponse(true, "Пользователь успешно зарегистрирован.");
         }
 
-        /// <summary>
-        /// Авторизация пользователя
-        /// </summary>
+        protected override Expression<Func<User, bool>> CreateFilterExpression(string? filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+            {
+                return u => true;
+            }
+
+            var parameter = Expression.Parameter(typeof(User), "x");
+            var usernameProperty = Expression.Property(parameter, "Username");
+            var roleProperty = Expression.Property(parameter, "Role");
+
+            var filterExpression = Expression.OrElse(
+                Expression.Call(usernameProperty, "Contains", null, Expression.Constant(filter)),
+                Expression.Call(roleProperty, "Contains", null, Expression.Constant(filter))
+            );
+
+            return Expression.Lambda<Func<User, bool>>(filterExpression, parameter);
+        }
+
+        [HttpGet("paged")]
+        public override async Task<ActionResult<IEnumerable<User>>> GetPaged(
+     [FromQuery] string? filter,
+     [FromQuery] string? orderBy,
+     [FromQuery] int page = 1,
+     [FromQuery] int pageSize = 10)
+        {
+            return await base.GetPaged(filter, orderBy, page, pageSize);
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
         {
@@ -90,9 +115,6 @@ namespace Dokremstroi.Server.Controllers
             });
         }
 
-        /// <summary>
-        /// Генерация JWT-токена
-        /// </summary>
         private string GenerateJwtToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -116,25 +138,16 @@ namespace Dokremstroi.Server.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        /// <summary>
-        /// Хеширование пароля
-        /// </summary>
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        /// <summary>
-        /// Проверка валидности email
-        /// </summary>
         private bool IsValidEmail(string email)
         {
             return new EmailAddressAttribute().IsValid(email);
         }
 
-        /// <summary>
-        /// Формирование API-ответа
-        /// </summary>
         private IActionResult ApiResponse(bool success, string message, object? data = null)
         {
             return Ok(new { success, message, data });

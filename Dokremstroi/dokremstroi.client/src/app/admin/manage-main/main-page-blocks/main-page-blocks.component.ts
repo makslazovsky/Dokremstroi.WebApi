@@ -22,6 +22,8 @@ export class MainPageBlocksComponent implements OnInit {
   };
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = ''
 
   constructor(
     private manager: MainPageBlockManager,
@@ -33,10 +35,34 @@ export class MainPageBlocksComponent implements OnInit {
   }
 
   loadBlocks(): void {
-    this.manager.getAll().subscribe({
-      next: (blocks) => (this.blocks = blocks),
+    const filter = this.searchQuery ? this.searchQuery : '';
+    const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
+    this.manager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+      next: (response) => {
+        this.blocks = response.items;
+        this.totalCount = response.totalCount;
+        this.updatePagination();
+      },
       error: (err) => console.error('Ошибка загрузки блоков:', err),
     });
+  }
+
+  updatePagination(): void {
+    const totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
+    if (this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+      this.loadBlocks();
+    }
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadBlocks();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadBlocks();
   }
 
   onEdit(block: MainPageBlock): void {
@@ -111,7 +137,4 @@ export class MainPageBlocksComponent implements OnInit {
     return this.blocks.slice(startIndex, endIndex);
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-  }
 }

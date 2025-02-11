@@ -1,6 +1,7 @@
 .actions {
   display: flex;
   justify-content: center;
+  gap: 10px; /* Добавляем расстояние между кнопками */
   margin: 20px 0;
 }
 

@@ -225,30 +225,51 @@ namespace Dokremstroi.Server.Controllers
             return Ok(result);
         }
 
-        private Expression<Func<CompletedOrder, bool>>? CreateFilterExpression(string? filter)
+        private Expression<Func<CompletedOrder, bool>> CreateFilterExpression(string? filter)
         {
             if (string.IsNullOrEmpty(filter))
             {
-                return null;
+                return co => true;
             }
 
-            var parts = filter.Split('=');
-            if (parts.Length != 2)
+            var parameter = Expression.Parameter(typeof(CompletedOrder), "co");
+            var properties = typeof(CompletedOrder).GetProperties();
+            Expression? filterExpression = null;
+
+            foreach (var property in properties)
             {
-                return null;
+                Expression propertyExpression = Expression.Property(parameter, property.Name);
+                Expression constantExpression;
+
+                if (property.PropertyType == typeof(string))
+                {
+                    constantExpression = Expression.Constant(filter);
+                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                    var containsExpression = Expression.Call(propertyExpression, containsMethod, constantExpression);
+                    filterExpression = filterExpression == null ? containsExpression : Expression.OrElse(filterExpression, containsExpression);
+                }
+                else if (property.PropertyType == typeof(int) && int.TryParse(filter, out int intFilter))
+                {
+                    constantExpression = Expression.Constant(intFilter);
+                    var equalsExpression = Expression.Equal(propertyExpression, constantExpression);
+                    filterExpression = filterExpression == null ? equalsExpression : Expression.OrElse(filterExpression, equalsExpression);
+                }
+                else if (property.PropertyType == typeof(DateTime) && DateTime.TryParse(filter, out DateTime dateTimeFilter))
+                {
+                    constantExpression = Expression.Constant(dateTimeFilter);
+                    var equalsExpression = Expression.Equal(propertyExpression, constantExpression);
+                    filterExpression = filterExpression == null ? equalsExpression : Expression.OrElse(filterExpression, equalsExpression);
+                }
             }
 
-            var propertyName = parts[0];
-            var propertyValue = parts[1];
+            if (filterExpression == null)
+            {
+                return co => true;
+            }
 
-            var parameter = Expression.Parameter(typeof(CompletedOrder), "x");
-            var property = Expression.Property(parameter, propertyName);
-            var constant = Expression.Constant(propertyValue, typeof(string));
-            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-            var containsExpression = Expression.Call(property, containsMethod, constant);
-
-            return Expression.Lambda<Func<CompletedOrder, bool>>(containsExpression, parameter);
+            return Expression.Lambda<Func<CompletedOrder, bool>>(filterExpression, parameter);
         }
+
 
 
         private Func<IQueryable<CompletedOrder>, IOrderedQueryable<CompletedOrder>>? CreateOrderByExpression(string? orderBy)

@@ -21,6 +21,10 @@ export class ServicesListComponent implements OnInit {
     unit: 'Единица измерения',
     groupName: 'Группа'
   };
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = '';
 
   constructor(private serviceManager: ServiceManager, private dialog: MatDialog) { }
 
@@ -29,13 +33,24 @@ export class ServicesListComponent implements OnInit {
   }
 
   loadServices(): void {
-    this.serviceManager.getAll().subscribe({
-      next: (data) => {
-        console.log('Loaded services:', data);
-        this.services = data;
+    const filter = this.searchQuery ? this.searchQuery : '';
+    const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
+    this.serviceManager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+      next: (response) => {
+        this.services = response.items;
+        this.totalCount = response.totalCount;
+        this.updatePagination();
       },
-      error: (err) => console.error('Ошибка загрузки услуг:', err)
+      error: (err) => console.error('Ошибка загрузки услуг:', err),
     });
+  }
+
+  updatePagination(): void {
+    const totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
+    if (this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+      this.loadServices();
+    }
   }
 
   onEdit(service: any): void {
@@ -50,18 +65,14 @@ export class ServicesListComponent implements OnInit {
           { name: 'unit', label: 'Единица измерения', type: 'text', required: true },
           { name: 'groupName', label: 'Группа', type: 'text', required: true },
         ],
-        initialValues: service, // Передаем данные для заполнения
+        initialValues: service,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const updatedService = { ...result, id: service.id };
-
-        console.log('Обновленные данные с ID:', updatedService);
         this.updateService(service.id, updatedService);
-      } else {
-        console.log('Редактирование отменено');
       }
     });
   }
@@ -69,8 +80,7 @@ export class ServicesListComponent implements OnInit {
   private updateService(id: number, updatedData: any): void {
     this.serviceManager.update(id, updatedData).subscribe({
       next: () => {
-        console.log('Услуга успешно обновлена');
-        this.loadServices(); // Обновляем список услуг
+        this.loadServices();
       },
       error: (err) => {
         console.error('Ошибка при обновлении услуги:', err);
@@ -91,7 +101,7 @@ export class ServicesListComponent implements OnInit {
         this.serviceManager.delete(service.id).subscribe({
           next: () => {
             alert('Услуга успешно удалена!');
-            this.loadServices(); // Обновляем таблицу
+            this.loadServices();
           },
           error: (err) => console.error('Ошибка при удалении услуги:', err)
         });
@@ -118,7 +128,8 @@ export class ServicesListComponent implements OnInit {
       if (result) {
         this.serviceManager.create(result).subscribe({
           next: (newService) => {
-            this.services.push(newService); // Обновляем список услуг
+            this.services.push(newService);
+            this.loadServices();
           },
           error: (err) => {
             console.error('Ошибка при добавлении услуги:', err);
@@ -128,4 +139,13 @@ export class ServicesListComponent implements OnInit {
     });
   }
 
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadServices();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadServices();
+  }
 }

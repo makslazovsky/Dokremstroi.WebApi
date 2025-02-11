@@ -15,8 +15,22 @@ export class ReviewManager {
     return this.http.get<Review[]>(this.apiUrl);
   }
 
-  getApprovedPaged(page: number, pageSize: number): Observable<{ items: Review[], totalCount: number }> {
-    return this.http.get<{ items: Review[], totalCount: number }>(`${this.apiUrl}/approved/paged?page=${page}&pageSize=${pageSize}`);
+  getApprovedPaged(page: number, pageSize: number, filter: string = ''): Observable<{ items: Review[], totalCount: number }> {
+    const url = `${this.apiUrl}/approved/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}`;
+    return this.http.get<{ items: Review[], totalCount: number }>(url);
+  }
+
+  getUnapprovedPaged(page: number, pageSize: number, filter: string = ''): Observable<{ items: Review[], totalCount: number }> {
+    const url = `${this.apiUrl}/unapproved/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}`;
+    return this.http.get<{ items: Review[], totalCount: number }>(url);
+  }
+
+  approveAll(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/approveAll`, {});
+  }
+
+  deleteUnapproved(): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/deleteUnapproved`);
   }
 
   getById(id: number): Observable<Review> {

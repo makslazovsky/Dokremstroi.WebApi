@@ -27,10 +27,17 @@ namespace Dokremstroi.Server.Controllers
 
         [HttpGet("approved/paged")]
         public async Task<ActionResult<IEnumerable<Review>>> GetApprovedPaged(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10)
+    [FromQuery] string? filter,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
         {
             Expression<Func<Review, bool>> filterExpression = r => r.IsApproved;
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                filterExpression = filterExpression.AndAlso(r => r.Comment.Contains(filter));
+            }
+
             var (items, totalCount) = await _manager.GetPagedAsync(
                 filterExpression,
                 q => q.OrderBy(r => r.Id),
@@ -46,5 +53,61 @@ namespace Dokremstroi.Server.Controllers
 
             return Ok(result);
         }
+
+
+
+
+        [HttpPost("approveAll")]
+        public async Task<IActionResult> ApproveAll()
+        {
+            var reviews = await _manager.GetFilteredAsync(r => !r.IsApproved);
+            foreach (var review in reviews)
+            {
+                review.IsApproved = true;
+                await _manager.UpdateAsync(review);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("deleteUnapproved")]
+        public async Task<IActionResult> DeleteUnapproved()
+        {
+            var reviews = await _manager.GetFilteredAsync(r => !r.IsApproved);
+            foreach (var review in reviews)
+            {
+                await _manager.DeleteAsync(review.Id);
+            }
+            return NoContent();
+        }
+
+        [HttpGet("unapproved/paged")]
+        public async Task<ActionResult<IEnumerable<Review>>> GetUnapprovedPaged(
+     [FromQuery] string? filter,
+     [FromQuery] int page = 1,
+     [FromQuery] int pageSize = 10)
+        {
+            Expression<Func<Review, bool>> filterExpression = r => !r.IsApproved;
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                filterExpression = filterExpression.AndAlso(r => r.Comment.Contains(filter));
+            }
+
+            var (items, totalCount) = await _manager.GetPagedAsync(
+                filterExpression,
+                q => q.OrderBy(r => r.Id),
+                page,
+                pageSize
+            );
+
+            var result = new
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
+
+            return Ok(result);
+        }
+
     }
 }

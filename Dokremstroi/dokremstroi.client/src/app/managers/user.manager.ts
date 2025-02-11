@@ -16,6 +16,11 @@ export class UserManager {
     return this.http.get<User[]>(`${this.apiUrl}/User`);
   }
 
+  getPaged(page: number, pageSize: number, filter: string = '', orderBy: string = ''): Observable<{ items: User[], totalCount: number }> {
+    const url = `${this.apiUrl}/User/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`;
+    return this.http.get<{ items: User[], totalCount: number }>(url);
+  }
+
   create(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/User`, user);
   }

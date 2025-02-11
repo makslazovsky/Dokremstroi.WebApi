@@ -1,9 +1,15 @@
 <div class="actions">
   <button mat-button color="primary" (click)="onCreate()">Добавить блок</button>
+  <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Поиск...">
 </div>
-<app-table [data]="paginatedBlocks"
+<app-table [data]="blocks"
            [columns]="columns"
            [columnNames]="columnNames"
            (edit)="onEdit($event)"
            (delete)="onDelete($event)">
 </app-table>
+<div class="pagination">
+  <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
+  <span>Страница {{ currentPage }}</span>
+  <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * itemsPerPage) >= totalCount">Следующая</button>
+</div>

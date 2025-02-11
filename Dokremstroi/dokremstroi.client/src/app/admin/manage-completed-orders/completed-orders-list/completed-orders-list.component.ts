@@ -15,11 +15,13 @@ export class CompletedOrdersListComponent implements OnInit {
   columns: string[] = ['id', 'projectName', 'completionDate'];
   columnNames: { [key: string]: string } = {
     id: 'ID',
-    projectName: 'Название проекта',
-    completionDate: 'Дата завершения'
+      projectName: 'Название проекта',
+        completionDate: 'Дата завершения'
   };
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = ''
 
   constructor(
     private manager: CompletedOrderManager,
@@ -31,11 +33,27 @@ export class CompletedOrdersListComponent implements OnInit {
   }
 
   loadOrders(): void {
-    this.manager.getAll().subscribe({
-      next: (orders) => (this.completedOrders = orders),
+    const filter = this.searchQuery ? this.searchQuery : '';
+    const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
+    this.manager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+      next: (response) => {
+        this.completedOrders = response.items;
+        this.totalCount = response.totalCount;
+      },
       error: (err) => console.error('Ошибка загрузки выполненных заказов:', err),
     });
   }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadOrders();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadOrders();
+  }
+
 
   onEdit(order: CompletedOrder): void {
     const dialogRef = this.dialog.open(ModalDialogComponent, {

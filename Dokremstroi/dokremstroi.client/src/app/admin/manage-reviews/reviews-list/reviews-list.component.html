@@ -1,9 +1,18 @@
 <div class="actions">
   <button mat-button color="primary" (click)="onCreate()">Добавить отзыв</button>
+  <button mat-button color="accent" (click)="approveAll()">Подтвердить все отзывы</button>
+  <button mat-button color="warn" (click)="deleteUnapproved()">Удалить все неподтвержденные отзывы</button>
+  <mat-checkbox [(ngModel)]="filterUnapproved" (change)="onSearch()">Показать только неподтвержденные</mat-checkbox>
+  <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Поиск...">
 </div>
-  <app-table [data]="paginatedReviews"
-             [columns]="columns"
-             [columnNames]="columnNames"
-             (edit)="onEdit($event)"
-             (delete)="onDelete($event)">
-  </app-table>
+<app-table [data]="reviews"
+           [columns]="columns"
+           [columnNames]="columnNames"
+           (edit)="onEdit($event)"
+           (delete)="onDelete($event)">
+</app-table>
+<div class="pagination">
+  <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
+  <span>Страница {{ currentPage }}</span>
+  <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * itemsPerPage) >= totalCount">Следующая</button>
+</div>

@@ -22,6 +22,8 @@ export class ManageOrdersComponent implements OnInit {
   };
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = '';
 
   constructor(
     private orderManager: OrderManager,
@@ -33,10 +35,34 @@ export class ManageOrdersComponent implements OnInit {
   }
 
   loadOrders(): void {
-    this.orderManager.getAll().subscribe({
-      next: (orders) => (this.orders = orders),
+    const filter = this.searchQuery ? this.searchQuery : '';
+    const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
+    this.orderManager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+      next: (response) => {
+        this.orders = response.items;
+        this.totalCount = response.totalCount;
+        this.updatePagination();
+      },
       error: (err) => console.error('Ошибка загрузки заказов:', err),
     });
+  }
+
+  updatePagination(): void {
+    const totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
+    if (this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+      this.loadOrders();
+    }
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadOrders();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadOrders();
   }
 
   onEdit(order: UserOrderDto): void {
@@ -77,7 +103,7 @@ export class ManageOrdersComponent implements OnInit {
     }
     this.orderManager.delete(order.id).subscribe({
       next: () => {
-        this.orders = this.orders.filter(o => o.id !== order.id);
+        this.loadOrders();
         alert('Заказ успешно удален.');
       },
       error: (err) => console.error('Ошибка удаления заказа:', err)
@@ -103,15 +129,5 @@ export class ManageOrdersComponent implements OnInit {
         this.orderManager.create(createdOrder).subscribe(() => this.loadOrders());
       }
     });
-  }
-
-  get paginatedOrders(): UserOrderDto[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.orders.slice(startIndex, endIndex);
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage = page;
   }
 }

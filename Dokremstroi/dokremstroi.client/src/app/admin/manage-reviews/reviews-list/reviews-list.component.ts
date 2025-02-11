@@ -5,10 +5,10 @@ import { ReviewManager } from '../../../managers/review.manager';
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-    selector: 'app-reviews-list',
-    templateUrl: './reviews-list.component.html',
-    styleUrls: ['./reviews-list.component.css'],
-    standalone: false
+  selector: 'app-reviews-list',
+  templateUrl: './reviews-list.component.html',
+  styleUrls: ['./reviews-list.component.css'],
+  standalone: false
 })
 export class ReviewsListComponent implements OnInit {
   reviews: Review[] = [];
@@ -16,13 +16,16 @@ export class ReviewsListComponent implements OnInit {
   columnNames: { [key: string]: string } = {
     id: 'ID',
     userId: 'Идентификатор пользователя',
-    serviceId: 'Идентификатор заказа',
+    userOrderId: 'Идентификатор заказа',
     comment: 'Комментарий',
     rating: 'Оценка',
     isApproved: 'Подтвержден'
   };
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  totalCount: number = 0;
+  searchQuery: string = '';
+  filterUnapproved: boolean = false;
 
   constructor(
     private manager: ReviewManager,
@@ -34,8 +37,13 @@ export class ReviewsListComponent implements OnInit {
   }
 
   loadReviews(): void {
-    this.manager.getAll().subscribe({
-      next: (reviews) => (this.reviews = reviews),
+    const method = this.filterUnapproved ? 'getUnapprovedPaged' : 'getApprovedPaged';
+    const filter = this.searchQuery ? this.searchQuery : '';
+    this.manager[method](this.currentPage, this.itemsPerPage, filter).subscribe({
+      next: (response) => {
+        this.reviews = response.items;
+        this.totalCount = response.totalCount;
+      },
       error: (err) => console.error('Ошибка загрузки отзывов:', err),
     });
   }
@@ -79,7 +87,7 @@ export class ReviewsListComponent implements OnInit {
     }
     this.manager.delete(review.id).subscribe({
       next: () => {
-        this.reviews = this.reviews.filter(r => r.id !== review.id);
+        this.loadReviews();
         alert('Отзыв успешно удален.');
       },
       error: (err) => console.error('Ошибка удаления отзыва:', err)
@@ -108,13 +116,33 @@ export class ReviewsListComponent implements OnInit {
     });
   }
 
-  get paginatedReviews(): Review[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.reviews.slice(startIndex, endIndex);
-  }
-
   onPageChange(page: number): void {
     this.currentPage = page;
+    this.loadReviews();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadReviews();
+  }
+
+  approveAll(): void {
+    if (!confirm('Вы уверены, что хотите подтвердить все отзывы?')) {
+      return;
+    }
+    this.manager.approveAll().subscribe({
+      next: () => this.loadReviews(),
+      error: (err) => console.error('Ошибка подтверждения отзывов:', err)
+    });
+  }
+
+  deleteUnapproved(): void {
+    if (!confirm('Вы уверены, что хотите удалить все неподтвержденные отзывы?')) {
+      return;
+    }
+    this.manager.deleteUnapproved().subscribe({
+      next: () => this.loadReviews(),
+      error: (err) => console.error('Ошибка удаления неподтвержденных отзывов:', err)
+    });
   }
 }

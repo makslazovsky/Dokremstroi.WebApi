@@ -1,4 +1,5 @@
-﻿using Dokremstroi.Services.Managers;
+﻿using Dokremstroi.Data.Models;
+using Dokremstroi.Services.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
@@ -86,43 +87,37 @@ namespace Dokremstroi.Server.Controllers
             return Ok(items);
         }
 
-
-
-        private Expression<Func<T, bool>>? CreateFilterExpression(string filter)
+        protected virtual Expression<Func<T, bool>> CreateFilterExpression(string? filter)
         {
             if (string.IsNullOrEmpty(filter))
             {
-                return null;
+                return x => true;
             }
 
-            // Пример: filter в формате "PropertyName=Value"
             var parts = filter.Split('=');
             if (parts.Length != 2)
             {
-                return null; // Неверный формат
+                return x => true; // Неверный формат, возвращаем выражение, которое всегда верно
             }
 
             var propertyName = parts[0];
             var propertyValue = parts[1];
 
-            // Получаем свойство типа T
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.Property(parameter, propertyName);
-
-            // Преобразуем значение фильтра в правильный тип
             var constant = Expression.Constant(Convert.ChangeType(propertyValue, property.Type));
 
-            // Создаём выражение x => x.PropertyName == Value
             var equality = Expression.Equal(property, constant);
             return Expression.Lambda<Func<T, bool>>(equality, parameter);
         }
 
+
         [HttpGet("paged")]
         public virtual async Task<ActionResult<IEnumerable<T>>> GetPaged(
-    [FromQuery] string filter,
-    [FromQuery] string orderBy,
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10)
+     [FromQuery] string? filter,
+     [FromQuery] string? orderBy,
+     [FromQuery] int page = 1,
+     [FromQuery] int pageSize = 10)
         {
             // Преобразуем строку filter в выражение
             var filterExpression = CreateFilterExpression(filter);
@@ -138,8 +133,9 @@ namespace Dokremstroi.Server.Controllers
             );
 
             Response.Headers.Add("X-Total-Count", totalCount.ToString());
-            return Ok(items);
+            return Ok(new { Items = items, TotalCount = totalCount });
         }
+
 
         private Func<IQueryable<T>, IOrderedQueryable<T>>? CreateOrderByExpression(string orderBy)
         {
@@ -176,6 +172,45 @@ namespace Dokremstroi.Server.Controllers
         }
 
 
+
     }
+    public static class ExpressionExtensions
+    {
+        public static Expression<Func<T, bool>> AndAlso<T>(
+            this Expression<Func<T, bool>> expr1,
+            Expression<Func<T, bool>> expr2)
+        {
+            var parameter = Expression.Parameter(typeof(T));
+
+            var visitor = new ReplaceExpressionVisitor();
+            visitor.Add(expr1.Parameters[0], parameter);
+            visitor.Add(expr2.Parameters[0], parameter);
+
+            var combined = visitor.Visit(Expression.AndAlso(expr1.Body, expr2.Body));
+
+            return Expression.Lambda<Func<T, bool>>(combined, parameter);
+        }
+
+        private class ReplaceExpressionVisitor : ExpressionVisitor
+        {
+            private readonly Dictionary<Expression, Expression> _replacements = new Dictionary<Expression, Expression>();
+
+            public void Add(Expression original, Expression replacement)
+            {
+                _replacements[original] = replacement;
+            }
+
+            public override Expression Visit(Expression node)
+            {
+                if (node != null && _replacements.TryGetValue(node, out var replacement))
+                {
+                    return replacement;
+                }
+
+                return base.Visit(node);
+            }
+        }
+    }
+
 
 }
