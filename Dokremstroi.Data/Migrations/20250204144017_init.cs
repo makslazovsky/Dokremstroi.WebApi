@@ -66,7 +66,9 @@ namespace Dokremstroi.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,7 +141,7 @@ namespace Dokremstroi.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -157,12 +159,15 @@ namespace Dokremstroi.Data.Migrations
                 name: "UserOrderServices",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserOrderId = table.Column<int>(type: "int", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOrderServices", x => new { x.UserOrderId, x.ServiceId });
+                    table.PrimaryKey("PK_UserOrderServices", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserOrderServices_Services_ServiceId",
                         column: x => x.ServiceId,
@@ -196,6 +201,11 @@ namespace Dokremstroi.Data.Migrations
                 name: "IX_UserOrderServices_ServiceId",
                 table: "UserOrderServices",
                 column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOrderServices_UserOrderId",
+                table: "UserOrderServices",
+                column: "UserOrderId");
         }
 
         /// <inheritdoc />

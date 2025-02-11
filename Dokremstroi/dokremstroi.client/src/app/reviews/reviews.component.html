@@ -1,1 +1,17 @@
-<p>reviews works!</p>
+<div class="reviews">
+  <div *ngFor="let review of reviews" class="review-card">
+    <div class="review-content">
+      <p class="review-text">{{ review.comment }}</p>
+      <div class="rating">
+        <span *ngFor="let star of getStarRating(review.rating)">&#9733;</span>
+        <span *ngFor="let star of getStarRating(5 - review.rating)">&#9734;</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
+    <span>Страница {{ currentPage }}</span>
+    <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * pageSize) >= totalCount">Следующая</button>
+  </div>
+</div>

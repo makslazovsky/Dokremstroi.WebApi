@@ -15,6 +15,7 @@ import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/ma
 import { ReviewsListComponent } from './admin/manage-reviews/reviews-list/reviews-list.component'
 import { CompletedOrdersListComponent } from './admin/manage-completed-orders/completed-orders-list/completed-orders-list.component';
 import { UserListComponent } from './admin/manage-users/users-list/users-list.component';
+import { ManageOrdersComponent } from './admin/manage-orders/manage-orders.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
@@ -63,6 +64,12 @@ const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['Admin'] }
   },
+  {
+    path: 'admin/manage-orders', // Новый маршрут
+    component: ManageOrdersComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] }
+  },
   // Панель пользователя
   {
     path: 'user-dashboard',
@@ -81,7 +88,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,{ useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

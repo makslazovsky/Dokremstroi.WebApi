@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Dokremstroi.Server.Controllers
@@ -26,6 +27,14 @@ namespace Dokremstroi.Server.Controllers
             if (!Directory.Exists(_uploadFolder))
             {
                 Directory.CreateDirectory(_uploadFolder);
+            }
+        }
+
+        private void DeleteFile(string filePath)
+        {
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
             }
         }
 
@@ -116,7 +125,9 @@ namespace Dokremstroi.Server.Controllers
             }
             existingOrder.ProjectName = order.ProjectName;
             existingOrder.CompletionDate = order.CompletionDate;
-            existingOrder.Images = order.Images;
+
+            // Получение существующих изображений из базы данных
+            existingOrder.Images = (await _imageManager.GetFilteredAsync(img => img.CompletedOrderId == id)).ToList();
 
             // Обновляем основные данные заказа
             await _completedOrderManager.UpdateAsync(existingOrder);
@@ -126,11 +137,16 @@ namespace Dokremstroi.Server.Controllers
             {
                 var existingImages = existingOrder.Images ?? new List<CompletedOrderImage>();
 
-                // Удаляем отсутствующие изображения
-                var imagesToRemove = existingImages.Where(img => !order.Images.Any(newImg => newImg.Id == img.Id)).ToList();
-                foreach (var img in imagesToRemove)
+                // Удаляем отсутствующие изображения только если коллекция existingOrder.Images не пустая и не null
+                if (existingImages.Any())
                 {
-                    await _imageManager.DeleteAsync(img.Id);
+                    var imagesToRemove = existingImages.Where(img => order.Images == null || !order.Images.Any(newImg => newImg.Id == img.Id)).ToList();
+
+                    foreach (var img in imagesToRemove)
+                    {
+                        await _imageManager.DeleteAsync(img.Id);
+                        DeleteFile(Path.Combine(Directory.GetCurrentDirectory(), img.ImageUrl));
+                    }
                 }
 
                 // Добавляем или обновляем изображения
@@ -171,8 +187,101 @@ namespace Dokremstroi.Server.Controllers
                 return NotFound();
             }
 
+            var images = await _imageManager.GetFilteredAsync(img => img.CompletedOrderId == id);
+            foreach (var img in images)
+            {
+                await _imageManager.DeleteAsync(img.Id);
+                DeleteFile(Path.Combine(Directory.GetCurrentDirectory(), img.ImageUrl));
+            }
+
             await _completedOrderManager.DeleteAsync(id);
             return NoContent();
         }
+
+
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPaged(
+    [FromQuery] string? filter = null,
+    [FromQuery] string? orderBy = null,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            var filterExpression = CreateFilterExpression(filter);
+            var orderByExpression = CreateOrderByExpression(orderBy);
+
+            var (items, totalCount) = await _completedOrderManager.GetPagedAsync(
+                filterExpression,
+                orderByExpression,
+                page,
+                pageSize
+            );
+
+            var result = new
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
+
+            return Ok(result);
+        }
+
+        private Expression<Func<CompletedOrder, bool>>? CreateFilterExpression(string? filter)
+        {
+            if (string.IsNullOrEmpty(filter))
+            {
+                return null;
+            }
+
+            var parts = filter.Split('=');
+            if (parts.Length != 2)
+            {
+                return null;
+            }
+
+            var propertyName = parts[0];
+            var propertyValue = parts[1];
+
+            var parameter = Expression.Parameter(typeof(CompletedOrder), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var constant = Expression.Constant(propertyValue, typeof(string));
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+            var containsExpression = Expression.Call(property, containsMethod, constant);
+
+            return Expression.Lambda<Func<CompletedOrder, bool>>(containsExpression, parameter);
+        }
+
+
+        private Func<IQueryable<CompletedOrder>, IOrderedQueryable<CompletedOrder>>? CreateOrderByExpression(string? orderBy)
+        {
+            if (string.IsNullOrEmpty(orderBy))
+            {
+                return null;
+            }
+
+            var parts = orderBy.Split(':');
+            if (parts.Length != 2)
+            {
+                return null;
+            }
+
+            var propertyName = parts[0];
+            var direction = parts[1].ToLower();
+
+            var parameter = Expression.Parameter(typeof(CompletedOrder), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var lambda = Expression.Lambda(property, parameter);
+
+            var orderByMethod = direction == "asc" ? "OrderBy" : "OrderByDescending";
+            var method = typeof(Queryable).GetMethods()
+                .Where(m => m.Name == orderByMethod && m.GetParameters().Length == 2)
+                .Single()
+                .MakeGenericMethod(typeof(CompletedOrder), property.Type);
+
+            return (IQueryable<CompletedOrder> queryable) => (IOrderedQueryable<CompletedOrder>)method
+                .Invoke(null, new object[] { queryable, lambda });
+        }
+
+
+
     }
 }

@@ -6,18 +6,20 @@ import { ConfirmationDialogComponent } from '../../crud/confirmation-dialog/conf
 import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.component';
 
 @Component({
-    selector: 'app-services-list',
-    templateUrl: './services-list.component.html',
-    styleUrls: ['./services-list.component.css'],
-    standalone: false
+  selector: 'app-services-list',
+  templateUrl: './services-list.component.html',
+  styleUrls: ['./services-list.component.css'],
+  standalone: false
 })
 export class ServicesListComponent implements OnInit {
   services: Service[] = [];
-  columns: string[] = ['name', 'description', 'price'];
+  columns: string[] = ['name', 'description', 'price', 'unit', 'groupName'];
   columnNames: { [key: string]: string } = {
     name: 'Название',
     description: 'Описание',
-    price: 'Цена'
+    price: 'Цена',
+    unit: 'Единица измерения',
+    groupName: 'Группа'
   };
 
   constructor(private serviceManager: ServiceManager, private dialog: MatDialog) { }
@@ -45,6 +47,8 @@ export class ServicesListComponent implements OnInit {
           { name: 'name', label: 'Название', type: 'text', required: true },
           { name: 'description', label: 'Описание', type: 'text', required: true },
           { name: 'price', label: 'Цена', type: 'number', required: true },
+          { name: 'unit', label: 'Единица измерения', type: 'text', required: true },
+          { name: 'groupName', label: 'Группа', type: 'text', required: true },
         ],
         initialValues: service, // Передаем данные для заполнения
       },
@@ -63,7 +67,7 @@ export class ServicesListComponent implements OnInit {
   }
 
   private updateService(id: number, updatedData: any): void {
-    this.serviceManager.updateService(id, updatedData).subscribe({
+    this.serviceManager.update(id, updatedData).subscribe({
       next: () => {
         console.log('Услуга успешно обновлена');
         this.loadServices(); // Обновляем список услуг
@@ -104,6 +108,8 @@ export class ServicesListComponent implements OnInit {
           { name: 'name', label: 'Название', type: 'text', required: true },
           { name: 'description', label: 'Описание', type: 'textarea', required: true },
           { name: 'price', label: 'Цена', type: 'number', required: true },
+          { name: 'unit', label: 'Единица измерения', type: 'text', required: true },
+          { name: 'groupName', label: 'Группа', type: 'text', required: true },
         ],
       },
     });

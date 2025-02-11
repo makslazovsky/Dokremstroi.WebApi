@@ -1,2 +1,59 @@
 <h2>Личный кабинет</h2>
 <p>Добро пожаловать в ваш личный кабинет!</p>
+
+<h3>Ваши заказы</h3>
+<div *ngIf="orders.length > 0; else noOrders">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Общая стоимость</th>
+        <th>Дата заказа</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.id }}</td>
+        <td>{{ order.totalCost }}</td>
+        <td>{{ order.orderDate | date }}</td>
+        <td>{{ order.status }}</td>
+        <td>
+          <button *ngIf="!hasReview(order.id)" (click)="addReview(order.id)">Добавить отзыв</button>
+          <span *ngIf="hasReview(order.id)">Отзыв оставлен</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #noOrders>
+  <p>У вас пока нет заказов.</p>
+</ng-template>
+
+<h3>Ваши отзывы</h3>
+<div *ngIf="reviews.length > 0; else noReviews">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Идентификатор заказа</th>
+        <th>Комментарий</th>
+        <th>Оценка</th>
+        <th>Подтвержден</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let review of reviews">
+        <td>{{ review.id }}</td>
+        <td>{{ review.userOrderId }}</td>
+        <td>{{ review.comment }}</td>
+        <td>{{ review.rating }}</td>
+        <td>{{ review.isApproved ? 'Да' : 'Нет' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #noReviews>
+  <p>У вас пока нет отзывов.</p>
+</ng-template>

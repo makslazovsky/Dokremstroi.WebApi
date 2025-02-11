@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CompletedOrder, CompletedOrderImage } from '../models/completed-order.model';
+import * as $ from 'jquery';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,17 @@ export class CompletedOrderManager {
 
   getAll(): Observable<CompletedOrder[]> {
     return this.http.get<CompletedOrder[]>(this.apiUrl);
+  }
+
+  getPaged(filter: string | null, orderBy: string | null, page: number, pageSize: number): Observable<{ items: CompletedOrder[], totalCount: number }> {
+    let url = `${this.apiUrl}/paged?page=${page}&pageSize=${pageSize}`;
+    if (filter) {
+      url += `&filter=${encodeURIComponent(filter)}`;
+    }
+    if (orderBy) {
+      url += `&orderBy=${encodeURIComponent(orderBy)}`;
+    }
+    return this.http.get<{ items: CompletedOrder[], totalCount: number }>(url);
   }
 
   getById(id: number): Observable<CompletedOrder> {

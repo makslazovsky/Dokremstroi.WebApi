@@ -15,12 +15,19 @@ import { CompletedOrder, CompletedOrderImage } from '../models/completed-order.m
 export class CompletedOrdersComponent implements OnInit {
   completedOrders: CompletedOrder[] = [];
   searchQuery: string = '';
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalCount: number = 0;
   slideOptions: OwlOptions = {
     items: 1,
     dots: true,
     nav: true,
     loop: false,
     margin: 10,
+    autoplay: false,
+    smartSpeed: 600,
+    autoWidth: true,
+    center: true,
     responsive: {
       0: {
         items: 1
@@ -34,36 +41,62 @@ export class CompletedOrdersComponent implements OnInit {
     }
   };
 
+
   constructor(private completedOrderManager: CompletedOrderManager) { }
 
   ngOnInit(): void {
-    this.completedOrderManager.getAll().subscribe((orders) => {
-      this.completedOrders = orders.map(order => ({
-        ...order,
-        images: []
-      }));
-      this.loadImagesForOrders();
-    });
+    this.loadOrders();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    const filter = this.searchQuery ? `projectName=${this.searchQuery}` : '';
+    this.completedOrderManager.getPaged(filter, 'completionDate:desc', this.currentPage, this.pageSize)
+      .subscribe(response => {
+        console.log('Response from server:', response);
+        if (response && response.items && response.items.length > 0) {
+          this.completedOrders = response.items.map(order => ({
+            ...order,
+            images: []
+          }));
+          this.totalCount = response.totalCount;
+          console.log('Loaded orders:', this.completedOrders);
+          this.loadImagesForOrders();
+        } else {
+          console.warn('No orders found in the response.');
+          this.completedOrders = [];
+        }
+      }, error => {
+        console.error('Error loading orders:', error);
+      });
   }
 
   loadImagesForOrders(): void {
+    if (!this.completedOrders || this.completedOrders.length === 0) {
+      console.warn('No orders found to load images for.');
+      return;
+    }
+    console.log('Loading images for orders:', this.completedOrders);
     this.completedOrders.forEach(order => {
       this.completedOrderManager.getImagesByOrderId(order.id).subscribe((images) => {
         order.images = images;
-        console.log(`Загружены изображения для заказа ${order.id}:`, images);
+        console.log(`Loaded images for order ${order.id}:`, images);
+      }, error => {
+        console.error(`Error loading images for order ${order.id}:`, error);
       });
     });
   }
 
   getImageUrl(imageUrl: string): string {
-    const fullUrl = `https://localhost:7139/${imageUrl}`;
-    console.log(`Полный URL изображения: ${fullUrl}`);
-    return fullUrl;
+    return `https://localhost:7139/${imageUrl}`;
   }
 
   imageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    console.error(`Ошибка загрузки изображения: ${target.src}`);
     target.alt = 'Image not found';
   }
 
@@ -71,7 +104,8 @@ export class CompletedOrdersComponent implements OnInit {
     return image.id;
   }
 
-  onSearch(): void {
-    // Логика поиска по запросу searchQuery
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadOrders();
   }
 }

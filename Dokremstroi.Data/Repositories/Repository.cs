@@ -61,5 +61,30 @@ namespace Dokremstroi.Data.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
+        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+    Expression<Func<T, bool>> filter = null,
+    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+    int page = 1,
+    int pageSize = 10)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+            return (await query.ToListAsync(), totalCount);
+        }
     }
 }

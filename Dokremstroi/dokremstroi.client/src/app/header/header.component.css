@@ -61,6 +61,7 @@ nav {
       border-radius: 5px;
       font-family: 'Roboto', sans-serif;
       transition: background 0.3s, color 0.3s;
+      cursor: pointer; /* Добавляем курсор указателя для кнопок и ссылок */
     }
 
       nav ul li a.active {
@@ -73,29 +74,23 @@ nav {
       }
 
 /* Кнопки логина и регистрации */
-.auth-buttons {
-  flex: 0 0 auto; /* Кнопки занимают правую сторону */
-  display: flex;
-  gap: 10px; /* Расстояние между кнопками */
+.auth-buttons,
+.auth-button {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  transition: background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 
-  .auth-buttons a,
-  .auth-buttons button {
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-family: 'Roboto', sans-serif;
-    transition: background 0.3s, color 0.3s;
-    cursor: pointer;
+  .auth-buttons a:hover,
+  .auth-button:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
-
-    .auth-buttons a:hover,
-    .auth-buttons button:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
 
 /* Кнопка меню */
 .menu-toggle {

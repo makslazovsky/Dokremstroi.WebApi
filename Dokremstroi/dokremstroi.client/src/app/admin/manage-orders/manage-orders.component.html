@@ -1,0 +1,9 @@
+<div class="actions">
+  <button mat-button color="primary" (click)="onCreate()">Добавить заказ</button>
+</div>
+<app-table [data]="paginatedOrders"
+           [columns]="columns"
+           [columnNames]="columnNames"
+           (edit)="onEdit($event)"
+           (delete)="onDelete($event)">
+</app-table>

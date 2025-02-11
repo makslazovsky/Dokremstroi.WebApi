@@ -6,12 +6,11 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthManager{
-  private apiUrl = 'https://localhost:7139/api/user'; // URL к вашему API
+export class AuthManager {
+  private apiUrl = 'https://localhost:7139/api/user';
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  // Метод для логина
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
@@ -33,19 +32,44 @@ export class AuthManager{
     }
   }
 
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      const payload = JSON.parse(payloadJson);
 
 
-  // Сохранение токена в localStorage
+      const userIdStr = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+
+
+      const userId = parseInt(userIdStr, 10);
+
+
+      return isNaN(userId) ? null : userId;
+    } catch (error) {
+      console.error('Ошибка обработки токена:', error);
+      return null;
+    }
+  }
+
+
+  checkAuthorization(): void {
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['/login']); // Перенаправление на страницу входа, если не авторизован
+    }
+  }
+
   saveToken(token: string): void {
     localStorage.setItem('jwtToken', token);
   }
 
-  // Получение токена из localStorage
   getToken(): string | null {
     return localStorage.getItem('jwtToken');
   }
 
-  // Удаление токена (logout)
   logout(): void {
     localStorage.removeItem('jwtToken');
     this.router.navigate(['/login']); // Перенаправление на страницу входа
@@ -60,7 +84,6 @@ export class AuthManager{
       const payloadJson = atob(payloadBase64);
       const payload = JSON.parse(payloadJson);
 
-      // Проверяем, не истек ли токен
       const exp = payload.exp * 1000;
       return Date.now() < exp;
     } catch (error) {

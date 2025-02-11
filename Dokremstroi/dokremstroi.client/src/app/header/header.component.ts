@@ -3,10 +3,10 @@ import { AuthManager } from '../managers/auth.manager';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.css'],
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
+  standalone: false
 })
 export class HeaderComponent {
   isMenuOpen = false;
@@ -25,6 +25,10 @@ export class HeaderComponent {
 
   isLoggedIn(): boolean {
     return this.authManager.isLoggedIn();
+  }
+
+  isAdmin(): boolean {
+    return this.authManager.hasRole('Admin');
   }
 
   @HostListener('window:resize', ['$event'])

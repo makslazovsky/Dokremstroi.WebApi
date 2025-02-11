@@ -53,5 +53,15 @@ namespace Dokremstroi.Services.Managers
         {
             return await _repository.GetFilteredAsync(predicate);
         }
+
+        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+    Expression<Func<T, bool>> filter = null,
+    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+    int page = 1,
+    int pageSize = 10)
+        {
+            return await _repository.GetPagedAsync(filter, orderBy, page, pageSize);
+        }
+
     }
 }

@@ -143,15 +143,15 @@ namespace Dokremstroi.Data.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserOrderId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("UserOrderId");
 
                     b.ToTable("Reviews");
                 });
@@ -168,12 +168,20 @@ namespace Dokremstroi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -216,8 +224,9 @@ namespace Dokremstroi.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalCost")
                         .HasColumnType("decimal(18,2)");
@@ -234,15 +243,26 @@ namespace Dokremstroi.Data.Migrations
 
             modelBuilder.Entity("Dokremstroi.Data.Models.UserOrderService", b =>
                 {
-                    b.Property<int>("UserOrderId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserOrderId", "ServiceId");
+                    b.Property<int>("UserOrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ServiceId");
+
+                    b.HasIndex("UserOrderId");
 
                     b.ToTable("UserOrderServices");
                 });
@@ -260,13 +280,13 @@ namespace Dokremstroi.Data.Migrations
 
             modelBuilder.Entity("Dokremstroi.Data.Models.Review", b =>
                 {
-                    b.HasOne("Dokremstroi.Data.Models.Service", "Service")
+                    b.HasOne("Dokremstroi.Data.Models.UserOrder", "userOrder")
                         .WithMany()
-                        .HasForeignKey("ServiceId")
+                        .HasForeignKey("UserOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Service");
+                    b.Navigation("userOrder");
                 });
 
             modelBuilder.Entity("Dokremstroi.Data.Models.UserOrder", b =>

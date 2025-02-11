@@ -15,6 +15,10 @@ export class ReviewManager {
     return this.http.get<Review[]>(this.apiUrl);
   }
 
+  getApprovedPaged(page: number, pageSize: number): Observable<{ items: Review[], totalCount: number }> {
+    return this.http.get<{ items: Review[], totalCount: number }>(`${this.apiUrl}/approved/paged?page=${page}&pageSize=${pageSize}`);
+  }
+
   getById(id: number): Observable<Review> {
     return this.http.get<Review>(`${this.apiUrl}/${id}`);
   }

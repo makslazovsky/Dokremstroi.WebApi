@@ -1,1 +1,16 @@
-<p>services works!</p>
+<div class="services-container">
+  <h2>Услуги</h2>
+  <form [formGroup]="serviceForm">
+    <div *ngFor="let service of services">
+      <div class="service-item">
+        <input type="checkbox" [formControlName]="service.id.toString()" (change)="toggleService(service)">
+        <label>{{ service.name }} ({{ service.unit }}) - {{ service.price | currency }}</label>
+        <input type="number" min="1" formControlName="quantity-{{ service.id }}" *ngIf="selectedServices.includes(service)">
+      </div>
+    </div>
+    <div class="total-cost">
+      <p>Итоговая стоимость: {{ totalCost | currency }}</p>
+    </div>
+    <button type="button" (click)="placeOrder()">Сделать заказ</button>
+  </form>
+</div>

@@ -117,6 +117,65 @@ namespace Dokremstroi.Server.Controllers
             return Expression.Lambda<Func<T, bool>>(equality, parameter);
         }
 
+        [HttpGet("paged")]
+        public virtual async Task<ActionResult<IEnumerable<T>>> GetPaged(
+    [FromQuery] string filter,
+    [FromQuery] string orderBy,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            // Преобразуем строку filter в выражение
+            var filterExpression = CreateFilterExpression(filter);
+
+            // Преобразуем строку orderBy в выражение
+            var orderByExpression = CreateOrderByExpression(orderBy);
+
+            var (items, totalCount) = await _manager.GetPagedAsync(
+                filterExpression,
+                orderByExpression,
+                page,
+                pageSize
+            );
+
+            Response.Headers.Add("X-Total-Count", totalCount.ToString());
+            return Ok(items);
+        }
+
+        private Func<IQueryable<T>, IOrderedQueryable<T>>? CreateOrderByExpression(string orderBy)
+        {
+            if (string.IsNullOrEmpty(orderBy))
+            {
+                return null;
+            }
+
+            // Пример: orderBy в формате "PropertyName:asc"
+            var parts = orderBy.Split(':');
+            if (parts.Length != 2)
+            {
+                return null; // Неверный формат
+            }
+
+            var propertyName = parts[0];
+            var direction = parts[1].ToLower();
+
+            // Получаем свойство типа T
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, propertyName);
+            var lambda = Expression.Lambda(property, parameter);
+
+            var orderByMethod = direction == "asc" ? "OrderBy" : "OrderByDescending";
+            var orderByExpression = Expression.Call(
+                typeof(Queryable),
+                orderByMethod,
+                new Type[] { typeof(T), property.Type },
+                parameter,
+                lambda
+            );
+
+            return (IQueryable<T> queryable) => (IOrderedQueryable<T>)queryable.Provider.CreateQuery(orderByExpression);
+        }
+
+
     }
 
 }

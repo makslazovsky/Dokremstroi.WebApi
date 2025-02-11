@@ -1,15 +1,31 @@
 <div class="completed-orders">
-  <div *ngFor="let order of completedOrders" class="completed-order-card">
-    <h3>{{ order.projectName }}</h3>
-    <p>{{ order.completionDate | date:'dd.MM.yyyy' }}</p>
-    <div class="carousel-container" *ngIf="order.images.length > 0">
-      <owl-carousel-o [options]="slideOptions">
-        <ng-container *ngFor="let image of order.images; trackBy: trackByImageId">
-          <ng-template carouselSlide [id]="image.id.toString()">
-            <img [src]="getImageUrl(image.imageUrl)" alt="{{ order.projectName }}" (error)="imageError($event)" class="order-image">
-          </ng-template>
-        </ng-container>
-      </owl-carousel-o>
+  <div class="search-bar">
+    <input [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Поиск..." />
+  </div>
+
+  <div *ngIf="completedOrders.length > 0; else noOrders">
+    <div *ngFor="let order of completedOrders" class="completed-order-card">
+      <h3>{{ order.projectName }}</h3>
+      <p>{{ order.completionDate | date:'dd.MM.yyyy' }}</p>
+      <div class="carousel-container">
+        <owl-carousel-o [options]="slideOptions">
+          <ng-container *ngFor="let image of order.images">
+            <ng-template carouselSlide>
+              <img [src]="getImageUrl(image.imageUrl)" (error)="imageError($event)" alt="order image">
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
     </div>
+  </div>
+
+  <ng-template #noOrders>
+    <p>Заказы не найдены</p>
+  </ng-template>
+
+  <div class="pagination">
+    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
+    <span>Страница {{ currentPage }}</span>
+    <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * pageSize) >= totalCount">Следующая</button>
   </div>
 </div>

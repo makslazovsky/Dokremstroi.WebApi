@@ -39,6 +39,8 @@ import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/ma
 import { QuillModule } from 'ngx-quill';
 import { UserListComponent } from './admin/manage-users/users-list/users-list.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { ManageOrdersComponent } from './admin/manage-orders/manage-orders.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -48,7 +50,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    ServicesComponent,
+    
     ReviewsComponent,
     ContactComponent,
     LoginComponent,
@@ -65,12 +67,14 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     ConfirmationDialogComponent,
     MainPageBlocksComponent,
     UserListComponent,
+    ManageOrdersComponent,
 
   ],
   imports: [
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    ServicesComponent,
     MatDialogModule, // Добавлено
     MatFormFieldModule, // Добавлено
     MatInputModule, // Добавлено
@@ -82,7 +86,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     FormsModule,
     QuillModule.forRoot(),
     CarouselModule,
-
+    MatSnackBarModule,
     CompletedOrdersComponent
   ],
   providers: [

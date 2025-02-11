@@ -12,13 +12,13 @@ namespace Dokremstroi.Data.Models
         public int Id { get; set; }
         public decimal TotalCost { get; set; } // Общая стоимость заказа
         public DateTime OrderDate { get; set; } // Дата заказа
-        public OrderStatus Status { get; set; } // Статус заказа
+        public string Status { get; set; } // Статус заказа
 
         // Связь с пользователем
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
         // Навигационные свойства
-        public List<UserOrderService> UserOrderServices { get; set; } // Промежуточная таблица для связи с услугами
+        public List<UserOrderService>? UserOrderServices { get; set; } // Промежуточная таблица для связи с услугами
     }
 
 }

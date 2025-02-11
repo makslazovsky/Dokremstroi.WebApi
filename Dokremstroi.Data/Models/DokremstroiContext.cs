@@ -22,9 +22,6 @@ namespace Dokremstroi.Data.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Настройка связи многие-ко-многим между UserOrder и Service
-            modelBuilder.Entity<UserOrderService>()
-                .HasKey(uos => new { uos.UserOrderId, uos.ServiceId });
 
             modelBuilder.Entity<UserOrder>()
                .HasOne(uos => uos.User)
@@ -32,14 +29,20 @@ namespace Dokremstroi.Data.Models
                .HasForeignKey(uos => uos.UserId);
 
             modelBuilder.Entity<UserOrderService>()
+             .Property(uos => uos.Id)
+             .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<UserOrderService>()
                 .HasOne(uos => uos.UserOrder)
                 .WithMany(uo => uo.UserOrderServices)
-                .HasForeignKey(uos => uos.UserOrderId);
+                .HasForeignKey(uos => uos.UserOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserOrderService>()
                 .HasOne(uos => uos.Service)
                 .WithMany(s => s.UserOrderServices)
-                .HasForeignKey(uos => uos.ServiceId);
+                .HasForeignKey(uos => uos.ServiceId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

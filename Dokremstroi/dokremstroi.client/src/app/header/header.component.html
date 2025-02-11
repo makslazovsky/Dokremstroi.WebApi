@@ -17,9 +17,15 @@
         <li><a routerLink="/reviews" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Отзывы</a></li>
         <li><a routerLink="/contact" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Контакты</a></li>
 
+        <!-- Личный кабинет -->
+        <ng-container *ngIf="isLoggedIn()">
+          <li *ngIf="isAdmin()"><a routerLink="/admin-dashboard">Админ панель</a></li>
+          <li *ngIf="!isAdmin()"><a routerLink="/user-dashboard">Личный кабинет</a></li>
+        </ng-container>
+
         <!-- Кнопки авторизации -->
         <ng-container *ngIf="isLoggedIn(); else guestMenu">
-          <li><button (click)="logout()">Выход</button></li>
+          <li><a (click)="logout()" class="auth-button">Выход</a></li>
         </ng-container>
         <ng-template #guestMenu>
           <li><a routerLink="/login">Логин</a></li>

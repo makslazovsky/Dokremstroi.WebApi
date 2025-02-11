@@ -18,5 +18,12 @@ namespace Dokremstroi.Services.Managers
 
         Task<T> FindAsync(Expression<Func<T, bool>> predicate);
         Task<IEnumerable<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate);
+
+        Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+    Expression<Func<T, bool>> filter = null,
+    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+    int page = 1,
+    int pageSize = 10);
+
     }
 }

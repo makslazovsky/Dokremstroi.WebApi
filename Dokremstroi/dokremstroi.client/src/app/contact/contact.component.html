@@ -3,7 +3,8 @@
   <p><strong>Адрес:</strong> {{ contactInfo.address }}</p>
   <p><strong>Телефон:</strong> {{ contactInfo.phoneNumber }}</p>
   <p><strong>Email:</strong> <a href="mailto:{{ contactInfo.email }}">{{ contactInfo.email }}</a></p>
-  <p><strong>Карта:</strong> <a [href]="contactInfo.mapLink" target="_blank">Открыть карту</a></p>
+  <p><strong>Карта:</strong></p>
+  <div id="map" style="width: 100%; height: 400px;"></div>
   <p><strong>Банковские реквизиты:</strong> {{ contactInfo.bankDetails }}</p>
 </div>
 

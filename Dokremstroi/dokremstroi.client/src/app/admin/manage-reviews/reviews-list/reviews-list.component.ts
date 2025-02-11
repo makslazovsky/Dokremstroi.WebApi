@@ -12,11 +12,11 @@ import { ModalDialogComponent } from '../../crud/modal-dialog/modal-dialog.compo
 })
 export class ReviewsListComponent implements OnInit {
   reviews: Review[] = [];
-  columns: string[] = ['id', 'userId', 'serviceId', 'comment', 'rating', 'isApproved'];
+  columns: string[] = ['id', 'userId', 'userOrderId', 'comment', 'rating', 'isApproved'];
   columnNames: { [key: string]: string } = {
     id: 'ID',
     userId: 'Идентификатор пользователя',
-    serviceId: 'Идентификатор услуги',
+    serviceId: 'Идентификатор заказа',
     comment: 'Комментарий',
     rating: 'Оценка',
     isApproved: 'Подтвержден'
@@ -47,7 +47,7 @@ export class ReviewsListComponent implements OnInit {
         title: 'Редактирование отзыва',
         fields: [
           { name: 'userId', label: 'Идентификатор пользователя', type: 'number', required: true },
-          { name: 'serviceId', label: 'Идентификатор услуги', type: 'number', required: true },
+          { name: 'userOrderId', label: 'Идентификатор заказа', type: 'number', required: true },
           { name: 'comment', label: 'Комментарий', type: 'textarea', required: true },
           { name: 'rating', label: 'Оценка', type: 'number', required: true },
           { name: 'isApproved', label: 'Подтвержден', type: 'checkbox', required: false },
@@ -93,7 +93,7 @@ export class ReviewsListComponent implements OnInit {
         title: 'Добавление нового отзыва',
         fields: [
           { name: 'userId', label: 'Идентификатор пользователя', type: 'number', required: true },
-          { name: 'serviceId', label: 'Идентификатор услуги', type: 'number', required: true },
+          { name: 'userOrderId', label: 'Идентификатор заказа', type: 'number', required: true },
           { name: 'comment', label: 'Комментарий', type: 'textarea', required: true },
           { name: 'rating', label: 'Оценка', type: 'number', required: true },
           { name: 'isApproved', label: 'Подтвержден', type: 'checkbox', required: false },
