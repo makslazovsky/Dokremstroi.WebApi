@@ -15,6 +15,11 @@ export class ReviewManager {
     return this.http.get<Review[]>(this.apiUrl);
   }
 
+  getPagedForUser(page: number, pageSize: number, userId: number, filter: string = '', orderBy: string = ''): Observable<{ items: Review[], totalCount: number }> {
+    const url = `${this.apiUrl}/pagedForUser?page=${page}&pageSize=${pageSize}&userId=${userId}${filter ? `&filter=${filter}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`;
+    return this.http.get<{ items: Review[], totalCount: number }>(url);
+  }
+
   getApprovedPaged(page: number, pageSize: number, filter: string = ''): Observable<{ items: Review[], totalCount: number }> {
     const url = `${this.apiUrl}/approved/paged?page=${page}&pageSize=${pageSize}${filter ? `&filter=${filter}` : ''}`;
     return this.http.get<{ items: Review[], totalCount: number }>(url);

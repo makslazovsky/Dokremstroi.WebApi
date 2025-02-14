@@ -86,5 +86,10 @@ namespace Dokremstroi.Data.Repositories
 
             return (await query.ToListAsync(), totalCount);
         }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AnyAsync(predicate);
+        }
     }
 }

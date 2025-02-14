@@ -41,6 +41,9 @@ import { UserListComponent } from './admin/manage-users/users-list/users-list.co
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ManageOrdersComponent } from './admin/manage-orders/manage-orders.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -87,6 +90,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     QuillModule.forRoot(),
     CarouselModule,
     MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule, // Добавляем MatIconModule
     CompletedOrdersComponent
   ],
   providers: [

@@ -137,7 +137,7 @@ namespace Dokremstroi.Server.Controllers
         }
 
 
-        private Func<IQueryable<T>, IOrderedQueryable<T>>? CreateOrderByExpression(string orderBy)
+        protected Func<IQueryable<T>, IOrderedQueryable<T>>? CreateOrderByExpression(string orderBy)
         {
             if (string.IsNullOrEmpty(orderBy))
             {
@@ -159,17 +159,14 @@ namespace Dokremstroi.Server.Controllers
             var property = Expression.Property(parameter, propertyName);
             var lambda = Expression.Lambda(property, parameter);
 
-            var orderByMethod = direction == "asc" ? "OrderBy" : "OrderByDescending";
-            var orderByExpression = Expression.Call(
-                typeof(Queryable),
-                orderByMethod,
-                new Type[] { typeof(T), property.Type },
-                parameter,
-                lambda
-            );
+            var orderByMethod = direction == "asc" ? nameof(Queryable.OrderBy) : nameof(Queryable.OrderByDescending);
+            var method = typeof(Queryable).GetMethods()
+                                          .First(m => m.Name == orderByMethod && m.GetParameters().Length == 2)
+                                          .MakeGenericMethod(typeof(T), property.Type);
 
-            return (IQueryable<T> queryable) => (IOrderedQueryable<T>)queryable.Provider.CreateQuery(orderByExpression);
+            return (IQueryable<T> queryable) => (IOrderedQueryable<T>)method.Invoke(null, new object[] { queryable, lambda });
         }
+
 
 
 

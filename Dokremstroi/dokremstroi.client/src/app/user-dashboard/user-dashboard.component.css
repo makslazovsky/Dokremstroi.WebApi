@@ -1,3 +1,22 @@
+.mat-form-field {
+  display: flex;
+  align-items: center;
+}
+
+button[mat-icon-button] {
+padding: 0px;
+
+}
+
+  button[mat-icon-button] mat-icon {
+    font-size: 24px; /* Установим размер иконки */
+  }
+
+.mat-datepicker-content {
+  z-index: 1000;
+  background-color: white;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

@@ -25,6 +25,7 @@ namespace Dokremstroi.Data.Repositories
     int page = 1,
     int pageSize = 10);
 
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Dokremstroi.Data.Models;
 using Dokremstroi.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,7 +13,12 @@ namespace Dokremstroi.Server.Controllers
     [ApiController]
     public class ReviewController : BaseController<Review>
     {
-        public ReviewController(IManager<Review> manager) : base(manager) { }
+        public ReviewController(IManager<Review> manager) : base(manager)
+        {
+
+        }
+
+
 
         [HttpGet("byOrderId/{orderId}")]
         public async Task<ActionResult<IEnumerable<Review>>> GetByOrderId(int orderId)
@@ -108,6 +114,68 @@ namespace Dokremstroi.Server.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("pagedForUser")]
+        public async Task<IActionResult> GetPagedForUser(
+    [FromQuery] int userId,
+    [FromQuery] string? filter = null,
+    [FromQuery] string? orderBy = null,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            var filterExpression = CreateFilterExpressionForUser(filter, userId);
+            var orderByExpression = CreateOrderByExpression(orderBy);
+
+            var (items, totalCount) = await _manager.GetPagedAsync(
+                filterExpression,
+                orderByExpression,
+                page,
+                pageSize
+            );
+
+            var result = new
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
+
+            return Ok(result);
+        }
+
+        private Expression<Func<Review, bool>> CreateFilterExpressionForUser(string? filter, int userId)
+        {
+            var parameter = Expression.Parameter(typeof(Review), "r");
+            var userIdProperty = Expression.Property(parameter, "UserId");
+            var userIdConstant = Expression.Constant(userId);
+            var userIdExpression = Expression.Equal(userIdProperty, userIdConstant);
+            var filterExpression = userIdExpression;
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var filterParts = filter.Split(';'); // Ожидаем, что фильтры будут разделены точкой с запятой
+
+                foreach (var part in filterParts)
+                {
+                    var propertyFilter = part.Split('=');
+                    if (propertyFilter.Length == 2)
+                    {
+                        var propertyName = propertyFilter[0];
+                        var propertyValue = propertyFilter[1];
+
+                        var property = Expression.Property(parameter, propertyName);
+                        var constant = Expression.Constant(propertyValue, typeof(string));
+                        var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                        var containsExpression = Expression.Call(property, containsMethod, constant);
+                        filterExpression = Expression.AndAlso(filterExpression, containsExpression);
+                    }
+                }
+            }
+
+            return Expression.Lambda<Func<Review, bool>>(filterExpression, parameter);
+        }
+
+
+
 
     }
 }

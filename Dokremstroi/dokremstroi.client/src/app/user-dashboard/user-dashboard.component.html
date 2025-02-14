@@ -2,6 +2,16 @@
 <p>Добро пожаловать в ваш личный кабинет!</p>
 
 <h3>Ваши заказы</h3>
+<div>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Выберите дату" [readonly]="true" [(ngModel)]="searchQueryOrders" (dateChange)="onSearchOrders()">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <button mat-icon-button matSuffix *ngIf="searchQueryOrders" (click)="clearDate()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
 <div *ngIf="orders.length > 0; else noOrders">
   <table>
     <thead>
@@ -26,12 +36,20 @@
       </tr>
     </tbody>
   </table>
+  <div class="pagination">
+    <button (click)="onPageChangeOrders(currentPageOrders - 1)" [disabled]="currentPageOrders === 1">Предыдущая</button>
+    <span>Страница {{ currentPageOrders }}</span>
+    <button (click)="onPageChangeOrders(currentPageOrders + 1)" [disabled]="(currentPageOrders * itemsPerPageOrders) >= totalCountOrders">Следующая</button>
+  </div>
 </div>
 <ng-template #noOrders>
   <p>У вас пока нет заказов.</p>
 </ng-template>
 
 <h3>Ваши отзывы</h3>
+<div>
+  <input matInput [(ngModel)]="searchQueryReviews" (ngModelChange)="onSearchReviews()" placeholder="Поиск отзывов...">
+</div>
 <div *ngIf="reviews.length > 0; else noReviews">
   <table>
     <thead>
@@ -53,6 +71,11 @@
       </tr>
     </tbody>
   </table>
+  <div class="pagination">
+    <button (click)="onPageChangeReviews(currentPageReviews - 1)" [disabled]="currentPageReviews === 1">Предыдущая</button>
+    <span>Страница {{ currentPageReviews }}</span>
+    <button (click)="onPageChangeReviews(currentPageReviews + 1)" [disabled]="(currentPageReviews * itemsPerPageReviews) >= totalCountReviews">Следующая</button>
+  </div>
 </div>
 <ng-template #noReviews>
   <p>У вас пока нет отзывов.</p>

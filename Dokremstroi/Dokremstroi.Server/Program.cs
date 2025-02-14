@@ -43,6 +43,7 @@ builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<ICompletedOrderManager, CompletedOrderManager>();
 builder.Services.AddScoped<UserOrderServiceManager>(); // Добавлено
 builder.Services.AddScoped<UserOrderManager>(); // Добавлено
+//builder.Services.AddScoped<IReviewManager, ReviewManager>();
 
 // Добавляем CORS
 builder.Services.AddCors(options =>
