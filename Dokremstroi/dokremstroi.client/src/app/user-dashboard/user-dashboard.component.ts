@@ -116,7 +116,7 @@ export class UserDashboardComponent implements OnInit {
         title: 'Добавить отзыв',
         fields: [
           { name: 'comment', label: 'Комментарий', type: 'textarea', required: true },
-          { name: 'rating', label: 'Оценка', type: 'number', required: true }
+          { name: 'rating', label: 'Оценка', type: 'rating', required: true }
         ],
         initialValues: { userOrderId: orderId }
       }
@@ -135,6 +135,8 @@ export class UserDashboardComponent implements OnInit {
       }
     });
   }
+
+
 
   clearDate(): void {
     this.searchQueryOrders = null;

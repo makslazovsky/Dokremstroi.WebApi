@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dokremstroi.Server", "Dokre
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "dokremstroi.client", "Dokremstroi\dokremstroi.client\dokremstroi.client.esproj", "{63B05547-C23E-485D-BBD9-24322B5EF579}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dokremstroi.Tests", "Dokremstroi.Tests\Dokremstroi.Tests.csproj", "{D1B0D1D4-B6CF-4E95-BA34-E877683E17C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{63B05547-C23E-485D-BBD9-24322B5EF579}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63B05547-C23E-485D-BBD9-24322B5EF579}.Release|Any CPU.Build.0 = Release|Any CPU
 		{63B05547-C23E-485D-BBD9-24322B5EF579}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D1B0D1D4-B6CF-4E95-BA34-E877683E17C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B0D1D4-B6CF-4E95-BA34-E877683E17C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B0D1D4-B6CF-4E95-BA34-E877683E17C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B0D1D4-B6CF-4E95-BA34-E877683E17C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

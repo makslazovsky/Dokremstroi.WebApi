@@ -1,7 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // Импортируем FormsModule
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -33,7 +34,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from './admin/crud/confirmation-dialog/confirmation-dialog.component';
 import { MainPageBlocksComponent } from './admin/manage-main/main-page-blocks/main-page-blocks.component';
 import { QuillModule } from 'ngx-quill';
@@ -44,6 +44,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { StarRatingComponent } from './admin/crud/star-rating/star-rating.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { MatIconModule } from '@angular/material/icon';
     MainPageBlocksComponent,
     UserListComponent,
     ManageOrdersComponent,
+    StarRatingComponent,
 
   ],
   imports: [
@@ -82,6 +84,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule, // Добавлено
     MatInputModule, // Добавлено
     MatButtonModule, // Добавлено
+    MatSliderModule,
     MatCheckboxModule,
     ReactiveFormsModule,
     BrowserModule, HttpClientModule,

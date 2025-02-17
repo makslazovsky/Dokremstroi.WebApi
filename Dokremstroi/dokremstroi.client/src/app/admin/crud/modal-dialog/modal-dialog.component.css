@@ -124,6 +124,24 @@ button {
   content: '' !important;
 }
 
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+
 /* Forced Colors Mode */
 @media (forced-colors: active) {
   * {

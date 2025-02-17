@@ -28,7 +28,17 @@ namespace Dokremstroi.Data.Models
                .WithMany(uo => uo.Orders)
                .HasForeignKey(uos => uos.UserId);
 
-            modelBuilder.Entity<UserOrderService>()
+            modelBuilder.Entity<UserOrder>()
+            .HasOne(uo => uo.Review)
+            .WithOne(r => r.userOrder)
+            .HasForeignKey<Review>(r => r.UserOrderId);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.userOrder)
+                .WithOne(uo => uo.Review)
+                .HasForeignKey<UserOrder>(uo => uo.ReviewId);
+
+                    modelBuilder.Entity<UserOrderService>()
              .Property(uos => uos.Id)
              .ValueGeneratedOnAdd();
 

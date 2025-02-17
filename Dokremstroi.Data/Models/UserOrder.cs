@@ -18,6 +18,10 @@ namespace Dokremstroi.Data.Models
         public int UserId { get; set; }
         public User? User { get; set; }
         // Навигационные свойства
+
+        public int? ReviewId { get; set; }
+
+        public Review? Review { get; set; }
         public List<UserOrderService>? UserOrderServices { get; set; } // Промежуточная таблица для связи с услугами
     }
 

@@ -25,6 +25,10 @@
             <mat-label>{{ field.label }}</mat-label>
             <input matInput [formControlName]="field.name" [type]="field.type" />
           </mat-form-field>
+          <div *ngSwitchCase="'rating'" class="full-width">
+            <label>{{ field.label }}</label>
+            <app-star-rating [formControlName]="field.name"></app-star-rating>
+          </div>
         </ng-container>
       </div>
 
@@ -33,9 +37,7 @@
       </div>
       <div *ngIf="field.type === 'file'" class="full-width">
         <label>{{ field.label }}</label>
-        <input type="file"
-               (change)="onFileSelected($event)"
-               multiple />
+        <input type="file" (change)="onFileSelected($event)" multiple />
       </div>
     </ng-container>
   </form>
@@ -43,10 +45,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Отмена</button>
-  <button mat-raised-button
-          color="primary"
-          [disabled]="form.invalid"
-          (click)="onSubmit()">
+  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">
     Сохранить
   </button>
 </mat-dialog-actions>
