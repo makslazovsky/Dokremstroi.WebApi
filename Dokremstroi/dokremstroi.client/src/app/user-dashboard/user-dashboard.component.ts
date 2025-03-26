@@ -136,6 +136,24 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
+  getPaginationNumbers(totalItems: number, itemsPerPage: number): number[] {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalCountOrders / this.itemsPerPageOrders);
+  }
+
+  getTotalPagesReviews(): number {
+    return Math.ceil(this.totalCountReviews / this.itemsPerPageReviews);
+  }
+
+  getPaginationNumbersReviews(totalItems: number, itemsPerPage: number): number[] {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
 
 
   clearDate(): void {

@@ -1,8 +1,21 @@
 .actions {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Добавляем расстояние между кнопками */
   margin: 20px 0;
+  gap: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Расстояние между элементами */
+  margin-top: 20px;
+}
+
+.page-info {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 button {

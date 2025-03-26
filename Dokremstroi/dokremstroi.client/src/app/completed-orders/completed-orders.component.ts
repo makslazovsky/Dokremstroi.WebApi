@@ -54,7 +54,7 @@ export class CompletedOrdersComponent implements OnInit {
   }
 
   loadOrders(): void {
-    const filter = this.searchQuery ? `projectName=${this.searchQuery}` : '';
+    const filter = this.searchQuery ? this.searchQuery : '';
     this.completedOrderManager.getPaged(this.currentPage, this.pageSize, filter, 'completionDate:desc')
       .subscribe(response => {
         console.log('Response from server:', response);

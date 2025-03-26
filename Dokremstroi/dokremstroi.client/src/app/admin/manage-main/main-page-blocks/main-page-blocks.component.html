@@ -10,6 +10,6 @@
 </app-table>
 <div class="pagination">
   <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
-  <span>Страница {{ currentPage }}</span>
+  <span class="page-info">Страница {{ currentPage }} из {{ getTotalPages() }}</span>
   <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * itemsPerPage) >= totalCount">Следующая</button>
 </div>

@@ -48,6 +48,10 @@ export class ReviewsListComponent implements OnInit {
     });
   }
 
+  getTotalPages(): number {
+    return Math.ceil(this.totalCount / this.itemsPerPage);
+  }
+
   onEdit(review: Review): void {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '400px',

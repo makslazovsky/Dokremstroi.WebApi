@@ -1,43 +1,67 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #f6f6f8;
-  font-family: Poppins, sans-serif;
-}
-
 .services-container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+  .services-container h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
 
 .service-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+  .service-item label {
+    flex-grow: 1;
+    font-size: 16px;
+    color: #333;
+    padding-left: 10px;
+  }
+
+  .service-item input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+  }
+
 .total-cost {
-  margin-top: 2rem;
+  text-align: center;
   font-weight: bold;
+  font-size: 18px;
+  margin-top: 20px;
 }
 
 button {
-  padding: 10px 20px;
-  background-color: #004b7a;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background: #004b7a;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
 }
 
   button:hover {
-    background-color: #0a2748;
+    background: #0a2748;
   }
 
 /* Стили для MatSnackBar */

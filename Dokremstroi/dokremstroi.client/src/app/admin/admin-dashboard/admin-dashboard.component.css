@@ -1,48 +1,47 @@
 .admin-dashboard-container {
-  max-width: 800px;
+  max-width: 400px; /* Ограничиваем ширину панели */
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 2rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  border-radius: 10px;
+  background-color: #ffffff;
   text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #333;
+  margin-bottom: 20px;
 }
 
 .admin-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
+  flex-direction: column; /* Размещаем кнопки в столбец */
   align-items: center;
+  gap: 15px; /* Расстояние между кнопками */
 }
 
 button {
-  padding: 10px 20px;
+  width: 100%; /* Кнопки занимают всю ширину контейнера */
+  max-width: 300px; /* Максимальная ширина кнопки */
+  padding: 12px 20px;
   font-size: 16px;
+  font-weight: bold;
   color: white;
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff, #0056b3); /* Градиентный фон */
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  flex: 1;
-  min-width: 200px; /* Установим минимальную ширину для кнопок */
-  max-width: 250px; /* Установим максимальную ширину для кнопок */
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-  button:not(:last-child) {
-    margin-right: 10px; /* Добавим разделители между кнопками */
-  }
-
   button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   }
 
   button:focus {
@@ -50,6 +49,7 @@ button {
   }
 
   button:active {
-    background-color: #003f7f;
+    background: #003f7f;
     transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   }

@@ -9,9 +9,22 @@
     </div>
   </div>
 
-  <div class="pagination">
-    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Предыдущая</button>
-    <span>Страница {{ currentPage }}</span>
-    <button (click)="onPageChange(currentPage + 1)" [disabled]="(currentPage * pageSize) >= totalCount">Следующая</button>
+  <div class="pagination-container">
+    <button class="pagination-button" (click)="onPageChangeReviews(currentPageReviews - 1)" [disabled]="currentPageReviews === 1">
+      &laquo;
+    </button>
+
+    <button *ngFor="let page of getPaginationNumbersReviews(totalCountReviews, itemsPerPageReviews)"
+            (click)="onPageChangeReviews(page)"
+            class="pagination-button"
+            [class.active]="page === currentPageReviews">
+      {{ page }}
+    </button>
+
+    <button class="pagination-button"
+            (click)="onPageChangeReviews(currentPageReviews + 1)"
+            [disabled]="currentPageReviews === getTotalPagesReviews()">
+      &raquo;
+    </button>
   </div>
-</div>
+

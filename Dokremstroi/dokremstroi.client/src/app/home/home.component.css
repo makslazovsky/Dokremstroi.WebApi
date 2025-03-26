@@ -1,17 +1,26 @@
 .block {
-  margin-bottom: 20px;
+  margin: 20px auto !important; /* Центрируем блоки и добавляем отступы сверху и снизу */
+  max-width: 90% !important; /* Ограничиваем максимальную ширину до 90% экрана */
+  padding: 20px !important; /* Добавляем внутренние отступы для блоков */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important; /* Добавляем тень для блока */
+  border-radius: 8px !important; /* Скругляем углы блоков */
+  background-color: #fff !important; /* Задаем белый фон для блоков */
 }
 
   .block h2 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-align: center !important; /* Центрируем заголовок */
   }
 
   .block img {
-    max-width: 100%;
-    height: auto;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important; /* Убираем пробелы вокруг изображений */
+    margin: 0 auto !important; /* Центрируем изображение */
   }
 
   .block div {
-    margin-top: 10px;
+    margin-top: 10px !important;
+    text-align: center !important; /* Центрируем текстовое содержимое */
   }

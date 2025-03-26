@@ -45,6 +45,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { StarRatingComponent } from './admin/crud/star-rating/star-rating.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { PaginationTotalPagesPipe } from './pipe/paginationTotalPages';
 
 
 @NgModule({
@@ -54,7 +57,6 @@ import { StarRatingComponent } from './admin/crud/star-rating/star-rating.compon
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    
     ReviewsComponent,
     ContactComponent,
     LoginComponent,
@@ -85,6 +87,8 @@ import { StarRatingComponent } from './admin/crud/star-rating/star-rating.compon
     MatInputModule, // Добавлено
     MatButtonModule, // Добавлено
     MatSliderModule,
+    MatCardModule,  // Добавляем MatCardModule
+    MatChipsModule,  // Добавляем MatChipsModule
     MatCheckboxModule,
     ReactiveFormsModule,
     BrowserModule, HttpClientModule,
@@ -95,6 +99,7 @@ import { StarRatingComponent } from './admin/crud/star-rating/star-rating.compon
     MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    PaginationTotalPagesPipe,
     MatIconModule, // Добавляем MatIconModule
     CompletedOrdersComponent
   ],

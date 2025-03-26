@@ -35,7 +35,7 @@ export class CompletedOrdersListComponent implements OnInit {
   loadOrders(): void {
     const filter = this.searchQuery ? this.searchQuery : '';
     const orderBy = ''; // Дополнительно можно добавить сортировку, если нужно
-    this.manager.getPaged(this.currentPage, this.itemsPerPage, filter, orderBy).subscribe({
+    this.manager.getPaged(this.currentPage, this.itemsPerPage, filter, 'completionDate:desc').subscribe({
       next: (response) => {
         this.completedOrders = response.items;
         this.totalCount = response.totalCount;
@@ -43,6 +43,11 @@ export class CompletedOrdersListComponent implements OnInit {
       error: (err) => console.error('Ошибка загрузки выполненных заказов:', err),
     });
   }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalCount / this.itemsPerPage);
+  }
+
 
   onSearch(): void {
     this.currentPage = 1;

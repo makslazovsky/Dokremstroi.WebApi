@@ -4,12 +4,12 @@
     <div *ngFor="let service of services">
       <div class="service-item">
         <input type="checkbox" [formControlName]="service.id.toString()" (change)="toggleService(service)">
-        <label>{{ service.name }} ({{ service.unit }}) - {{ service.price | currency }}</label>
+        <label>{{ service.name }} ({{ service.unit }}) - {{ service.price | currency:'BYN':'symbol' }}</label>
         <input type="number" min="1" formControlName="quantity-{{ service.id }}" *ngIf="selectedServices.includes(service)">
       </div>
     </div>
     <div class="total-cost">
-      <p>Итоговая стоимость: {{ totalCost | currency }}</p>
+      <p>Итоговая стоимость: {{ totalCost | currency:'BYN':'symbol' }}</p>
     </div>
     <button type="button" (click)="placeOrder()">Сделать заказ</button>
   </form>

@@ -1,82 +1,136 @@
-<h2>Личный кабинет</h2>
-<p>Добро пожаловать в ваш личный кабинет!</p>
+<div class="user-dashboard">
+  <mat-card>
+    <mat-card-title>Личный кабинет</mat-card-title>
+    <mat-card-subtitle>Добро пожаловать в ваш профиль</mat-card-subtitle>
+  </mat-card>
 
-<h3>Ваши заказы</h3>
-<div>
-  <mat-form-field>
-    <input matInput [matDatepicker]="picker" placeholder="Выберите дату" [readonly]="true" [(ngModel)]="searchQueryOrders" (dateChange)="onSearchOrders()">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-    <button mat-icon-button matSuffix *ngIf="searchQueryOrders" (click)="clearDate()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
-</div>
-<div *ngIf="orders.length > 0; else noOrders">
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Общая стоимость</th>
-        <th>Дата заказа</th>
-        <th>Статус</th>
-        <th>Действия</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orders">
-        <td>{{ order.id }}</td>
-        <td>{{ order.totalCost }}</td>
-        <td>{{ order.orderDate | date }}</td>
-        <td>{{ order.status }}</td>
-        <td>
-          <button *ngIf="!hasReview(order.id)" (click)="addReview(order.id)">Добавить отзыв</button>
-          <span *ngIf="hasReview(order.id)">Отзыв оставлен</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination">
-    <button (click)="onPageChangeOrders(currentPageOrders - 1)" [disabled]="currentPageOrders === 1">Предыдущая</button>
-    <span>Страница {{ currentPageOrders }}</span>
-    <button (click)="onPageChangeOrders(currentPageOrders + 1)" [disabled]="(currentPageOrders * itemsPerPageOrders) >= totalCountOrders">Следующая</button>
-  </div>
-</div>
-<ng-template #noOrders>
-  <p>У вас пока нет заказов.</p>
-</ng-template>
+  <!-- Блок заказов -->
+  <mat-card class="card-section">
+    <mat-card-title>Ваши заказы</mat-card-title>
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Выберите дату" [(ngModel)]="searchQueryOrders" (dateChange)="onSearchOrders()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <button mat-icon-button *ngIf="searchQueryOrders" (click)="clearDate()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
 
-<h3>Ваши отзывы</h3>
-<div>
-  <input matInput [(ngModel)]="searchQueryReviews" (ngModelChange)="onSearchReviews()" placeholder="Поиск отзывов...">
+    <div *ngIf="orders.length > 0; else noOrders">
+      <div class="table-container">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Общая стоимость</th>
+              <th>Дата</th>
+              <th>Статус</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>{{ order.id }}</td>
+              <td>{{ order.totalCost | currency:'RUB' }}</td>
+              <td>{{ order.orderDate | date:'dd.MM.yyyy' }}</td>
+              <td>
+                <mat-chip [color]="order.status === 'Завершен' ? 'primary' : 'warn'">{{ order.status }}</mat-chip>
+              </td>
+              <td>
+                <button mat-button color="primary" *ngIf="!hasReview(order.id)" (click)="addReview(order.id)">
+                  <mat-icon>rate_review</mat-icon> Оставить отзыв
+                </button>
+                <span *ngIf="hasReview(order.id)" class="reviewed">Отзыв оставлен</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container">
+        <button class="pagination-button" (click)="onPageChangeOrders(currentPageOrders - 1)" [disabled]="currentPageOrders === 1">
+          &laquo;
+        </button>
+
+        <button *ngFor="let page of getPaginationNumbers(totalCountOrders, itemsPerPageOrders)"
+                (click)="onPageChangeOrders(page)"
+                class="pagination-button"
+                [class.active]="page === currentPageOrders">
+          {{ page }}
+        </button>
+
+        <button class="pagination-button"
+                (click)="onPageChangeOrders(currentPageOrders + 1)"
+                [disabled]="currentPageOrders === getTotalPages()">
+          &raquo;
+        </button>
+      </div>
+
+
+    </div>
+      <ng-template #noOrders>
+        <p class="empty-message">У вас пока нет заказов.</p>
+      </ng-template>
+</mat-card>
+
+  <!-- Блок отзывов -->
+  <mat-card class="card-section">
+    <mat-card-title>Ваши отзывы</mat-card-title>
+    <mat-form-field>
+      <input matInput [(ngModel)]="searchQueryReviews" (ngModelChange)="onSearchReviews()" placeholder="Поиск отзывов...">
+    </mat-form-field>
+
+    <div *ngIf="reviews.length > 0; else noReviews">
+      <div class="table-container">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Заказ</th>
+              <th>Комментарий</th>
+              <th>Оценка</th>
+              <th>Подтвержден</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let review of reviews">
+              <td>{{ review.id }}</td>
+              <td>{{ review.userOrderId }}</td>
+              <td>{{ review.comment }}</td>
+              <td>
+                <mat-icon *ngFor="let i of [].constructor(review.rating)">star</mat-icon>
+              </td>
+              <td>
+                <mat-icon [color]="review.isApproved ? 'primary' : 'warn'">
+                  {{ review.isApproved ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-container">
+        <button class="pagination-button" (click)="onPageChangeReviews(currentPageReviews - 1)" [disabled]="currentPageReviews === 1">
+          &laquo;
+        </button>
+
+        <button *ngFor="let page of getPaginationNumbersReviews(totalCountReviews, itemsPerPageReviews)"
+                (click)="onPageChangeReviews(page)"
+                class="pagination-button"
+                [class.active]="page === currentPageReviews">
+          {{ page }}
+        </button>
+
+        <button class="pagination-button"
+                (click)="onPageChangeReviews(currentPageReviews + 1)"
+                [disabled]="currentPageReviews === getTotalPagesReviews()">
+          &raquo;
+        </button>
+      </div>
+
+
+    </div>
+      <ng-template #noReviews>
+        <p class="empty-message">У вас пока нет отзывов.</p>
+      </ng-template>
+</mat-card>
 </div>
-<div *ngIf="reviews.length > 0; else noReviews">
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Идентификатор заказа</th>
-        <th>Комментарий</th>
-        <th>Оценка</th>
-        <th>Подтвержден</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let review of reviews">
-        <td>{{ review.id }}</td>
-        <td>{{ review.userOrderId }}</td>
-        <td>{{ review.comment }}</td>
-        <td>{{ review.rating }}</td>
-        <td>{{ review.isApproved ? 'Да' : 'Нет' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination">
-    <button (click)="onPageChangeReviews(currentPageReviews - 1)" [disabled]="currentPageReviews === 1">Предыдущая</button>
-    <span>Страница {{ currentPageReviews }}</span>
-    <button (click)="onPageChangeReviews(currentPageReviews + 1)" [disabled]="(currentPageReviews * itemsPerPageReviews) >= totalCountReviews">Следующая</button>
-  </div>
-</div>
-<ng-template #noReviews>
-  <p>У вас пока нет отзывов.</p>
-</ng-template>

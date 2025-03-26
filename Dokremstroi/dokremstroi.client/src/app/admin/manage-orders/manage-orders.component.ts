@@ -47,6 +47,10 @@ export class ManageOrdersComponent implements OnInit {
     });
   }
 
+  getTotalPages(): number {
+    return Math.ceil(this.totalCount / this.itemsPerPage);
+  }
+
   updatePagination(): void {
     const totalPages = Math.ceil(this.totalCount / this.itemsPerPage);
     if (this.currentPage > totalPages) {

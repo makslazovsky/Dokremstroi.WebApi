@@ -10,9 +10,9 @@ import { Review } from '../models/review.model';
 })
 export class ReviewsComponent implements OnInit {
   reviews: Review[] = [];
-  currentPage: number = 1;
-  pageSize: number = 5;
-  totalCount: number = 0;
+  currentPageReviews: number = 1;
+  itemsPerPageReviews: number = 5;
+  totalCountReviews: number = 0;
 
   constructor(private reviewManager: ReviewManager) { }
 
@@ -21,18 +21,36 @@ export class ReviewsComponent implements OnInit {
   }
 
   loadReviews(): void {
-    this.reviewManager.getApprovedPaged(this.currentPage, this.pageSize)
+    this.reviewManager.getApprovedPaged(this.currentPageReviews, this.itemsPerPageReviews)
       .subscribe(response => {
         this.reviews = response.items;
-        this.totalCount = response.totalCount;
+        this.totalCountReviews = response.totalCount;
       }, error => {
-        console.error('Error loading reviews:', error);
+        console.error('Ошибка загрузки отзывов:', error);
       });
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
+  onPageChangeReviews(page: number): void {
+    if (page < 1 || page > this.getTotalPagesReviews()) return;
+    this.currentPageReviews = page;
     this.loadReviews();
+  }
+
+  getTotalPagesReviews(): number {
+    return Math.ceil(this.totalCountReviews / this.itemsPerPageReviews);
+  }
+
+  getPaginationNumbersReviews(totalCount: number, itemsPerPage: number): number[] {
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalCountReviews / this.itemsPerPageReviews);
+  }
+
+  getPaginationNumbers(): number[] {
+    return Array.from({ length: this.getTotalPages() }, (_, i) => i + 1);
   }
 
   getStarRating(rating: number): string[] {
